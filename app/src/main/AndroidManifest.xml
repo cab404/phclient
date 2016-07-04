@@ -76,14 +76,11 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="http" android:host="ponyhawks.ru" android:pathPrefix="/talk" />
-            </intent-filter>
-
-            <intent-filter>
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="http" android:host="ponyhawks.ru" android:pathPrefix="/blog" />
+                <data
+                    android:scheme="https"
+                    android:host="ponyhawks.ru"
+                    android:pathPattern=".*"
+                    />
             </intent-filter>
 
         </activity>

@@ -117,7 +117,7 @@
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
     </style>
 
-    <string-array name="theme_values">
+    <string-array name="theme_values" translatable="false">
         <item>AppThemeLight</item>
         <item>AppThemeDark</item>
         <item>AppThemeDark.Green</item>
