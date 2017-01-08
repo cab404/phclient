@@ -19,12 +19,12 @@ public class LoginDependentActivity extends BaseActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        if (Providers.UserInfo.getInstance().getInfo() == null) {
-            final Intent intent = new Intent(this, SplashActivity.class);
-            intent.putExtra("returnTo", getIntent());
-            startActivity(intent);
-            finish();
-        }
+//        if (Providers.UserInfo.getInstance().getInfo() == null) {
+//            final Intent intent = new Intent(this, SplashActivity.class);
+//            intent.putExtra("returnTo", getIntent());
+//            startActivity(intent);
+//            finish();
+//        }
         super.onCreate(savedInstanceState, persistentState);
     }
 }

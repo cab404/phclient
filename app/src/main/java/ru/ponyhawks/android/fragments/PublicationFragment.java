@@ -40,7 +40,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.OnLongClick;
 import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.activity.RefreshRatePickerDialog;
@@ -48,7 +47,6 @@ import ru.ponyhawks.android.parts.CommentNumPart;
 import ru.ponyhawks.android.parts.CommentPart;
 import ru.ponyhawks.android.parts.LoadingPart;
 import ru.ponyhawks.android.parts.UpdateCommonInfoTask;
-import ru.ponyhawks.android.utils.HideablePartBehavior;
 import ru.ponyhawks.android.utils.Meow;
 import ru.ponyhawks.android.utils.MidnightSync;
 import ru.ponyhawks.android.utils.RequestManager;
@@ -63,7 +61,7 @@ import ru.ponyhawks.android.utils.UpdateDrawable;
  * @author cab404
  */
 public abstract class PublicationFragment extends ListFragment implements
-        CommentEditFragment.SendCallback,
+        AbstractCommentEditFragment.SendCallback,
         CommentPart.CommentPartCallback,
         RefreshRatePickerDialog.RefreshPickedListener {
     public static final String KEY_ID = "id";
@@ -75,11 +73,11 @@ public abstract class PublicationFragment extends ListFragment implements
     private Comment replyingTo = null;
     private boolean editing = false;
 
-    private CommentEditFragment commentFragment;
+    private AbstractCommentEditFragment commentFragment;
     private boolean atLeastSomethingIsHere;
     private boolean broken;
 
-    public void setCommentFragment(CommentEditFragment commentFragment) {
+    public void setCommentFragment(AbstractCommentEditFragment commentFragment) {
         this.commentFragment = commentFragment;
         commentFragment.setSendCallback(this);
     }
@@ -115,9 +113,6 @@ public abstract class PublicationFragment extends ListFragment implements
         setAdapter(adapter);
 
         sync = new MidnightSync(adapter);
-
-        spinningWheel = new UpdateDrawable(getActivity());
-        updateButton.setImageDrawable(spinningWheel);
 
         bindModules(sync);
         sync
@@ -159,7 +154,7 @@ public abstract class PublicationFragment extends ListFragment implements
                 });
 
 
-                spinningWheel.setNum(newCommentsStack.size());
+                commentFragment.setCommentCount(newCommentsStack.size());
                 commentPart.setSelectedId(next);
                 adapter.notifyDataSetChanged();
             }
@@ -173,7 +168,7 @@ public abstract class PublicationFragment extends ListFragment implements
             public void run() {
                 commentPart.clearNew();
                 newCommentsStack.clear();
-                spinningWheel.setNum(newCommentsStack.size());
+                commentFragment.setCommentCount(newCommentsStack.size());
                 adapter.notifyDataSetChanged();
             }
         });
@@ -182,7 +177,7 @@ public abstract class PublicationFragment extends ListFragment implements
     public void update(final boolean clearNew, int selfCommentId) {
         if (updating) return;
         updating = true;
-        setUpdating(true);
+        commentFragment.setUpdating(true);
         commentPart.setSelectedId(0);
         list.post(new Runnable() {
             @Override
@@ -221,7 +216,7 @@ public abstract class PublicationFragment extends ListFragment implements
                                     if (cm.is_new)
                                         newCommentsStack.add(cm.id);
                                 }
-                                spinningWheel.setNum(newCommentsStack.size());
+                                commentFragment.setCommentCount(newCommentsStack.size());
                             }
                         });
                     }
@@ -241,7 +236,7 @@ public abstract class PublicationFragment extends ListFragment implements
                     @Override
                     public void onFinish(RefreshCommentsRequest what) {
                         updating = false;
-                        setUpdating(false);
+                        commentFragment.setUpdating(false);
                     }
                 })
                 .start();
@@ -255,7 +250,7 @@ public abstract class PublicationFragment extends ListFragment implements
 
     public void fullReload() {
         updating = true;
-        setUpdating(true);
+        commentFragment.setUpdating(true);
         adapter.clear();
         final int loadingPartId = adapter.add(LoadingPart.class, null);
         Meow.inMain(new Runnable() {
@@ -313,11 +308,11 @@ public abstract class PublicationFragment extends ListFragment implements
                             @Override
                             public void run() {
                                 adapter.removeById(loadingPartId);
-                                spinningWheel.setNum(newCommentsStack.size());
+                                commentFragment.setCommentCount(newCommentsStack.size());
                             }
                         });
                         updating = false;
-                        setUpdating(false);
+                        commentFragment.setUpdating(false);
                     }
 
                     @Override
@@ -350,7 +345,7 @@ public abstract class PublicationFragment extends ListFragment implements
                 Toast.makeText(getActivity(), R.string.topic_link_copied, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.reply:
-                if (commentFragment.getState() == HideablePartBehavior.State.EXPANDED) {
+                if (commentFragment.isExpanded()) {
                     commentFragment.collapse();
                 } else
                     reply(null, getActivity());
@@ -390,28 +385,25 @@ public abstract class PublicationFragment extends ListFragment implements
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.colorful_button)
-    void onRefreshClicked() {
-        if (newCommentsStack.isEmpty())
+    @Override
+    public void onRefresh(boolean force) {
+        if (force) {
             update(true);
-        else
-            nextNew();
+        } else {
+            if (newCommentsStack.isEmpty())
+                update(true);
+            else
+                nextNew();
+        }
     }
 
     @OnLongClick(R.id.colorful_button)
     boolean onRefreshForced() {
-        update(true);
         return true;
     }
 
     @Bind(R.id.colorful_button)
     FloatingActionButton updateButton;
-
-    UpdateDrawable spinningWheel;
-
-    void setUpdating(boolean updating) {
-        spinningWheel.setSpinning(updating);
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -571,7 +563,7 @@ public abstract class PublicationFragment extends ListFragment implements
     }
 
     private void edit(Comment cm, Context context) {
-        if (commentFragment.getState() == HideablePartBehavior.State.EXPANDED) {
+        if (commentFragment.isExpanded()) {
             commentFragment.collapse();
             return;
         }

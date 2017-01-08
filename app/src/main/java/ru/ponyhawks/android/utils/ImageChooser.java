@@ -1,5 +1,6 @@
 package ru.ponyhawks.android.utils;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,11 +9,13 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.InputType;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -77,8 +80,21 @@ public class ImageChooser {
                         switch (which) {
                             case TAKE_PHOTO:
 
-
                                 File store = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                                if (
+                                        PackageManager.PERMISSION_GRANTED != ctx.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                                ||
+                                                PackageManager.PERMISSION_GRANTED != ctx.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                        ) {
+                                    ctx.requestPermissions(
+                                            new String[]{
+                                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                    Manifest.permission.READ_EXTERNAL_STORAGE
+                                            }, 42
+                                    );
+                                    return;
+                                }
+
                                 store = new File(store, ctx.getPackageName());
                                 try {
                                     if (!store.exists() && !(store.mkdirs() && new File(store, ".nomedia").createNewFile()))
@@ -105,35 +121,44 @@ public class ImageChooser {
                                 break;
 
                             case INPUT_URI:
-                                final EditText text = new EditText(ctx);
-                                text.setHint(R.string.enter_image_url);
-                                text.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+                                final LineInputDialog textInput = new LineInputDialog(ctx);
+                                textInput.show();
 
-                                final ClipboardManager cbm =
-                                        (ClipboardManager)
-                                                ctx.getSystemService(Context.CLIPBOARD_SERVICE);
-
-                                @SuppressWarnings("deprecation")
-                                CharSequence clipboard = cbm.getText();
-
-                                if (clipboard != null) {
-                                    try {
-                                        new URL(clipboard.toString());
-                                    } catch (MalformedURLException e) {
-                                        clipboard = "";
+                                textInput.setOnClick(new LineInputDialog.OnConfirmListener() {
+                                    @Override
+                                    public boolean onConfirm(Editable text) {
+                                        handler.handleImage(text.toString());
+                                        return true;
                                     }
-                                }
+                                });
+//                                final EditText text = new EditText(ctx);
+//                                text.setHint(R.string.enter_image_url);
+//                                text.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
+//
+//                                final ClipboardManager cbm =
+//                                        (ClipboardManager)
+//                                                ctx.getSystemService(Context.CLIPBOARD_SERVICE);
+//
+//                                @SuppressWarnings("deprecation")
+//                                CharSequence clipboard = cbm.getText();
+//
+//                                if (clipboard != null) {
+//                                    try {
+//                                        new URL(clipboard.toString());
+//                                    } catch (MalformedURLException e) {
+//                                        clipboard = "";
+//                                    }
+//                                }
+//
+//                                text.setText(clipboard);
 
-                                text.setText(clipboard);
-
-                                new AlertDialog.Builder(ctx)
-                                        .setView(text)
-                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                handler.handleImage(text.getText().toString());
-                                            }
-                                        }).show();
+//                                new AlertDialog.Builder(ctx)
+//                                        .setView(text)
+//                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                            }
+//                                        }).show();
                         }
                     }
                 })

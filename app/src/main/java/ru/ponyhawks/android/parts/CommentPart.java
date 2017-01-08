@@ -2,8 +2,11 @@ package ru.ponyhawks.android.parts;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,8 @@ import com.cab404.chumroll.ChumrollAdapter;
 import com.cab404.chumroll.ViewConverter;
 import com.cab404.libph.data.Comment;
 import com.cab404.libph.modules.CommentTreeModule;
+import com.cab404.moonlight.parser.HTMLTree;
+import com.cab404.moonlight.parser.Tag;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -46,6 +51,7 @@ import ru.ponyhawks.android.utils.MidnightSync;
 public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.InsertionRule<Comment> {
     Map<Integer, Comment> data = new HashMap<>();
     Map<Integer, Integer> ids = new HashMap<>();
+    Map<Integer, String> reposts = new HashMap<>();
 
     public boolean saveState = true;
     Map<Integer, HtmlRipper> savedStates = new HashMap<>();
@@ -56,11 +62,31 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     private int selectedId;
 
     public synchronized void register(Comment comment) {
+
+        if ("ph".equals(comment.author.login)) {
+            try {
+                HTMLTree html = new HTMLTree(comment.text);
+                List<Tag> tags = html.xPath("a&target=_blank");
+                if (tags.size() >= 2 && "[t]".equals(html.getContents(tags.get(0)))) {
+                    comment.author.login = html.getContents(tags.get(1));
+                    comment.author.small_icon = html.xPathFirstTag("img&align=left").get("src");
+                    System.out.println(comment.author.small_icon);
+                    System.out.println(comment.text);
+                    comment.text = "" + comment.text.substring(html.get(html.getClosingTag(html.xPathFirstTag("strong"))).end + 2);
+                    System.out.println(comment.text);
+                    comment.author.is_system = false;
+                    reposts.put(comment.id, tags.get(0).get("href"));
+                }
+            } catch (Exception e) {
+                // :\
+            }
+        }
+
         data.put(comment.id, comment);
     }
 
-    public void updateFrom(CommentTreeModule data){
-        for (Integer id : data.parents.keySet()){
+    public void updateFrom(CommentTreeModule data) {
+        for (Integer id : data.parents.keySet()) {
             this.data.get(id).parent = data.parents.get(id);
         }
     }
@@ -142,6 +168,8 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     TextView date;
     @Bind(R.id.avatar)
     ImageView avatar;
+    @Bind(R.id.repost)
+    ImageView repost;
     @Bind(R.id.userspace)
     View userspace;
     @Bind(R.id.delimiter)
@@ -155,6 +183,22 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
         super.convert(view, cm, index, parent, adapter);
 
         ButterKnife.bind(this, view);
+
+        if (reposts.containsKey(cm.id)) {
+            repost.setVisibility(View.VISIBLE);
+            repost.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    v.getContext().startActivity(
+                            new Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(reposts.get(cm.id))
+                            )
+                    );
+                }
+            });
+        } else
+            repost.setVisibility(View.GONE);
 
         view.setBackgroundColor(selectedId == cm.id ? 0x80000000 : cm.is_new ? 0x40000000 : 0);
 

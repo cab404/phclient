@@ -94,7 +94,7 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
 
                 String server_version = null;
                 try {
-                    final HttpURLConnection connection = (HttpURLConnection) new URL("http://cab404.ru/all/bin/ph/version.txt").openConnection();
+                    final HttpURLConnection connection = (HttpURLConnection) new URL("https://cab404.ru/all/bin/ph/version.txt").openConnection();
                     connection.setInstanceFollowRedirects(false);
                     final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     server_version = reader.readLine();

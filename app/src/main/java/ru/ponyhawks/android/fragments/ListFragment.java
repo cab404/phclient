@@ -1,7 +1,6 @@
 package ru.ponyhawks.android.fragments;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -59,12 +58,14 @@ public class ListFragment extends Fragment {
 
     @SuppressLint("NewApi")
     public void setAdapter(ListAdapter adapter) {
-        if (Build.VERSION.SDK_INT > 10)
-            list.setAdapter(adapter);
-        else
-            // That cast IS VERY IMPORTANT.
-            //noinspection RedundantCast
-            ((ListView) list).setAdapter(adapter);
+        if (list != null) {
+            if (Build.VERSION.SDK_INT > 10)
+                list.setAdapter(adapter);
+            else
+                // That cast IS VERY IMPORTANT.
+                //noinspection RedundantCast
+                ((ListView) list).setAdapter(adapter);
+        }
     }
 
 

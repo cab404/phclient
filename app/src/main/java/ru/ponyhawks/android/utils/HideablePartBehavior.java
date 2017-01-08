@@ -208,6 +208,7 @@ public class HideablePartBehavior<V extends View> extends CoordinatorLayout.Beha
 
     @Override
     public boolean onLayoutChild(CoordinatorLayout parent, final V child, int layoutDirection) {
+        parent.onLayoutChild(child, layoutDirection);
         child.offsetTopAndBottom(child.getTop() - lastTop);
         sync(child);
         return false;
@@ -216,6 +217,7 @@ public class HideablePartBehavior<V extends View> extends CoordinatorLayout.Beha
     @Override
     @SuppressWarnings("SimplifiableIfStatement")
     public boolean onInterceptTouchEvent(CoordinatorLayout parent, V child, MotionEvent ev) {
+
         if (dragHelper == null)
             init(parent, child);
 

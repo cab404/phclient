@@ -65,38 +65,38 @@ public class App extends Application {
                     getResources().getDisplayMetrics()
             );
         }
-
-        Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-
-            File errsave = new File(Environment.getExternalStorageDirectory(), "pherrlog.txt");
-
-            @Override
-            public void uncaughtException(Thread thread, Throwable ex) {
-                try {
-                    final PrintWriter writer = new PrintWriter(new FileOutputStream(errsave));
-                    ex.printStackTrace(writer);
-                    writer.close();
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException("Error while writing error :/", e);
-                }
-
-                Intent email = new Intent(Intent.ACTION_SEND);
-                email.setType("text/plain");
-                email.putExtra(Intent.EXTRA_EMAIL, new String[]{"me@cab404.ru"});
-                email.putExtra(Intent.EXTRA_SUBJECT,
-                        "phclient v" + appv + " crash on "
-                                + Build.PRODUCT +
-                                ", API " + Build.VERSION.SDK_INT);
-
-                email.putExtra(Intent.EXTRA_TEXT, "well, we've crashed. i'm not even sorry.\n" + ex.getLocalizedMessage());
-                email.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(errsave));
-                email.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(email);
-
-                throw new RuntimeException();
-            }
-
-        });
+//
+//        Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+//
+//            File errsave = new File(Environment.getExternalStorageDirectory(), "pherrlog.txt");
+//
+//            @Override
+//            public void uncaughtException(Thread thread, Throwable ex) {
+//                try {
+//                    final PrintWriter writer = new PrintWriter(new FileOutputStream(errsave));
+//                    ex.printStackTrace(writer);
+//                    writer.close();
+//                } catch (FileNotFoundException e) {
+//                    throw new RuntimeException("Error while writing error :/", e);
+//                }
+//
+//                Intent email = new Intent(Intent.ACTION_SEND);
+//                email.setType("text/plain");
+//                email.putExtra(Intent.EXTRA_EMAIL, new String[]{"me@cab404.ru"});
+//                email.putExtra(Intent.EXTRA_SUBJECT,
+//                        "phclient v" + appv + " crash on "
+//                                + Build.PRODUCT +
+//                                ", API " + Build.VERSION.SDK_INT);
+//
+//                email.putExtra(Intent.EXTRA_TEXT, "well, we've crashed. i'm not even sorry.\n" + ex.getLocalizedMessage());
+//                email.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(errsave));
+//                email.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(email);
+//
+//                throw new RuntimeException();
+//            }
+//
+//        });
 
     }
 

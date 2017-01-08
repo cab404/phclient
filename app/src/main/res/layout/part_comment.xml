@@ -24,6 +24,15 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:layout_width="@dimen/abc_text_size_small_material"
+                android:layout_height="@dimen/abc_text_size_small_material"
+                android:layout_marginRight="4dp"
+                android:tint="?colorAccent"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/repost"
+                android:src="@drawable/ic_reply"/>
+
+            <ImageView
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/abc_text_size_small_material"
                 android:layout_height="@dimen/abc_text_size_small_material"

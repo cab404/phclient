@@ -1,5 +1,7 @@
 package ru.ponyhawks.android.text.changers;
 
+import android.widget.EditText;
+
 import ru.ponyhawks.android.R;
 
 /**
@@ -37,4 +39,15 @@ public final class SimpleChangers {
             new ParamWrapTextChanger("<a href='%'>$</a>", R.drawable.ic_link, R.string.link);
     public static final TextChanger VIDEO =
             new ParamWrapTextChanger("<video>%</video>", R.drawable.ic_video, R.string.link);
+    public static final TextChanger RE = new SimpleTextChanger() {
+        @Override
+        public void change(int start, int end, EditText editable) {
+            editable.getText().insert(0, "~#re ");
+        }
+
+        @Override
+        public int getImageResource() {
+            return R.drawable.ic_re;
+        }
+    };
 }
