@@ -67,6 +67,7 @@
     <string name="wehavegotanupdate">We\'ve got an update for ya.</string>
     <string name="update">Update</string>
     <string name="reload_page">Reload page</string>
+    <string name="load_images_on_cellular">Load images on cellular</string>
 
     <string-array name="exit">
         <item>Yes</item>

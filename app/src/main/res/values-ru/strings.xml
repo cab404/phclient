@@ -116,5 +116,6 @@
     <string name="wehavegotanupdate">Доступно обновление!</string>
     <string name="update">Обновить</string>
     <string name="reload_page">Обновить страницу</string>
+    <string name="load_images_on_cellular">Загружать картинки с мобильной сети</string>
 
 </resources>

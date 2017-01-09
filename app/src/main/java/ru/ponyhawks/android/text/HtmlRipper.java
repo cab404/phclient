@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -41,7 +43,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.assist.ViewScaleType;
-import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.imageaware.NonViewAware;
 
 import java.util.ArrayList;
@@ -81,6 +82,7 @@ public class HtmlRipper {
     public boolean textIsSelectable;
     public boolean loadVideos;
     public boolean loadImages;
+    public boolean loadOnCellular;
 
     public int cutBackground = R.drawable.quote_background;
     public int codeBackground = R.drawable.quote_background;
@@ -238,7 +240,14 @@ public class HtmlRipper {
      */
     private void simpleEscape(final TextView target, final String text, final Context context) {
 
-		/*
+        boolean isCellNetwork;
+
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        isCellNetwork = (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE);
+        boolean loadImagesFinal = this.loadImages && (loadOnCellular || !isCellNetwork);
+
+        /*
          * Исправляем проблему с header-ом.
 		 * Даже не знаю, какой умный пегас умудрился панель действий отправить в текст.
 		 */
@@ -518,17 +527,20 @@ public class HtmlRipper {
                             DisplayImageOptions opt = new DisplayImageOptions.Builder()
                                     .cacheInMemory(true)
                                     .cacheOnDisk(true)
+                                    .showImageOnFail(errorImage)
                                     .imageScaleType(ImageScaleType.EXACTLY).build();
 
-                            if (loadImages && ImageLoader.getInstance().getDiskCache().get(src) == null)
-                                ImageLoader.getInstance().loadImage(src, size, opt, imageAware);
-                            else
-                                ImageLoader.getInstance().displayImage(
-                                        src,
-                                        new NonViewAware(src, size, ViewScaleType.FIT_INSIDE),
-                                        opt,
-                                        imageAware
-                                );
+                            if (loadImagesFinal) {
+                                if (ImageLoader.getInstance().getDiskCache().get(src) == null)
+                                    ImageLoader.getInstance().loadImage(src, size, opt, imageAware);
+                                else
+                                    ImageLoader.getInstance().displayImage(
+                                            src,
+                                            new NonViewAware(src, size, ViewScaleType.FIT_INSIDE),
+                                            opt,
+                                            imageAware
+                                    );
+                            }
 
                             off += repl.length();
                             break;

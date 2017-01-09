@@ -7,6 +7,10 @@
         android:defaultValue="true"
         android:title="@string/load_images" />
     <CheckBoxPreference
+        android:key="loadOnCellular"
+        android:title="@string/load_images_on_cellular"
+        android:defaultValue="true"/>
+    <CheckBoxPreference
         android:key="loadVideos"
         android:title="@string/load_videos" />
     <CheckBoxPreference
