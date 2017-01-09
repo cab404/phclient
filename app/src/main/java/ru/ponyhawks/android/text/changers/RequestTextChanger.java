@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import ru.ponyhawks.android.R;
+import ru.ponyhawks.android.utils.LineInputDialog;
 
 /**
  * Well, sorry for no comments here!
@@ -26,7 +28,9 @@ import ru.ponyhawks.android.R;
  */
 public abstract class RequestTextChanger implements TextChanger {
 
-    int ss, se;
+    private Fragment ctx;
+    int ss;
+    int se;
 
     public static void insert(EditText ed, String wrapping, int ss, int se, String param) {
         if (ss < 0) ss = -1;
@@ -39,6 +43,8 @@ public abstract class RequestTextChanger implements TextChanger {
                 .replace("%", param);
 
         int insi = ready.indexOf("$");
+        int seli = ed.getSelectionStart();
+        if (seli == -1) seli = 0;
 
         ready = ready
                 .replace("$", text.subSequence(ss, se));
@@ -47,52 +53,39 @@ public abstract class RequestTextChanger implements TextChanger {
 
         if (insi == -1)
             if (ss != se)
-                ed.setSelection(ss, ss + ready.length());
+                ed.setSelection(seli + ss, seli + ss + ready.length());
             else
-                ed.setSelection(ss);
+                ed.setSelection(seli + ss);
         else
             if (ss != se)
-                ed.setSelection(insi, insi + se - ss);
+                ed.setSelection(seli + insi, seli + insi + se - ss);
             else
-                ed.setSelection(insi);
+                ed.setSelection(seli + insi);
     }
 
+    @SuppressWarnings("ResourceType")
     @Override
     @SuppressLint("NewApi")
-    public void onSelect(Fragment ctx, final EditText text) {
-        final EditText windowET = new EditText(ctx.getActivity());
-        ss = text.getSelectionStart();
-        se = text.getSelectionEnd();
+    public void onSelect(Fragment ctx, final EditText editorText) {
+        this.ctx = ctx;
+        ss = editorText.getSelectionStart();
+        se = editorText.getSelectionEnd();
 
-        windowET.setHint(R.string.enter_image_url);
-        windowET.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
 
-        final ClipboardManager cbm =
-                (ClipboardManager)
-                        ctx.getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 
-        @SuppressWarnings("deprecation")
-        CharSequence clipboard = cbm.getText();
+        LineInputDialog dialog = new LineInputDialog(ctx.getActivity());
+        dialog.setText(getInitialText() + "");
+        dialog.setHint(ctx.getString(getHint()));
 
-        if (clipboard != null) {
-            try {
-                new URL(clipboard.toString());
-            } catch (MalformedURLException e) {
-                clipboard = "";
+        dialog.setOnClick(new LineInputDialog.OnConfirmListener() {
+            @Override
+            public boolean onConfirm(EditText text) {
+                handleText(editorText, ss, se, text.getText().toString());
+                System.out.println(text.getText());
+                return true;
             }
-        }
-        //noinspection ResourceType
-        windowET.setHint(getHint());
-        windowET.setText(clipboard);
-
-        new android.app.AlertDialog.Builder(ctx.getActivity())
-                .setView(windowET)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        handleText(text, ss, se, windowET.getText().toString());
-                    }
-                }).show();
+        });
+        dialog.show();
     }
 
     public abstract void handleText(EditText text, int ss, int se, String s);
@@ -112,5 +105,26 @@ public abstract class RequestTextChanger implements TextChanger {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+    }
+
+    @SuppressWarnings("deprecation")
+    public CharSequence getInitialText(){
+        CharSequence clipboard = null;
+        if (Build.VERSION.SDK_INT >= 11) {
+            final ClipboardManager cbm =
+                    (ClipboardManager)
+                            ctx.getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard = cbm.getText();
+        }
+
+        if (clipboard != null) {
+            try {
+                new URL(clipboard.toString());
+            } catch (MalformedURLException e) {
+                clipboard = "";
+            }
+        }
+
+        return clipboard;
     }
 }

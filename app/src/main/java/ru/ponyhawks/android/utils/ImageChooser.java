@@ -15,8 +15,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.InputType;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -126,39 +124,30 @@ public class ImageChooser {
 
                                 textInput.setOnClick(new LineInputDialog.OnConfirmListener() {
                                     @Override
-                                    public boolean onConfirm(Editable text) {
+                                    public boolean onConfirm(EditText text) {
                                         handler.handleImage(text.toString());
                                         return true;
                                     }
                                 });
-//                                final EditText text = new EditText(ctx);
-//                                text.setHint(R.string.enter_image_url);
-//                                text.setInputType(InputType.TYPE_TEXT_VARIATION_URI);
 //
-//                                final ClipboardManager cbm =
-//                                        (ClipboardManager)
-//                                                ctx.getSystemService(Context.CLIPBOARD_SERVICE);
-//
-//                                @SuppressWarnings("deprecation")
-//                                CharSequence clipboard = cbm.getText();
-//
-//                                if (clipboard != null) {
-//                                    try {
-//                                        new URL(clipboard.toString());
-//                                    } catch (MalformedURLException e) {
-//                                        clipboard = "";
-//                                    }
-//                                }
-//
-//                                text.setText(clipboard);
+                                textInput.setHint(ctx.getString(R.string.enter_image_url));
+                                final ClipboardManager cbm =
+                                        (ClipboardManager)
+                                                ctx.getSystemService(Context.CLIPBOARD_SERVICE);
 
-//                                new AlertDialog.Builder(ctx)
-//                                        .setView(text)
-//                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(DialogInterface dialog, int which) {
-//                                            }
-//                                        }).show();
+                                @SuppressWarnings("deprecation")
+                                CharSequence clipboard = cbm.getText();
+//
+                                if (clipboard != null) {
+                                    try {
+                                        new URL(clipboard.toString());
+                                    } catch (MalformedURLException e) {
+                                        clipboard = "";
+                                    }
+                                }
+
+                                textInput.setText(clipboard + "");
+
                         }
                     }
                 })

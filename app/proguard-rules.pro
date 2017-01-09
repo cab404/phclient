@@ -18,6 +18,13 @@
 -keep class butterknife.** { *; }
 -dontwarn butterknife.internal.**
 -keep class **$$ViewInjector { *; }
+-keep class org.apache.log4j.**
+-keepclassmembers class org.apache.http.HttpConnection
+-keepclassmembers class org.apache.http.HttpInetConnection
+-keepclassmembers class org.apache.http.client.HttpClient
+
+-dontwarn org.apache.commons.logging.**
+-dontwarn com.android.internal.http.multipart.MultipartEntity
 
 -keepclasseswithmembernames class * {
     @butterknife.* <fields>;

@@ -1,37 +1,8 @@
 package ru.ponyhawks.android.fragments;
 
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
-import android.text.SpannableStringBuilder;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.OnFocusChange;
-import butterknife.OnTextChanged;
-import ru.ponyhawks.android.R;
-import ru.ponyhawks.android.text.changers.TextChanger;
-import ru.ponyhawks.android.text.changers.TextPrism;
-import ru.ponyhawks.android.utils.HideablePartBehavior;
-import ru.ponyhawks.android.utils.IgnorantCoordinatorLayout;
-import ru.ponyhawks.android.utils.Meow;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,6 +23,7 @@ public abstract class AbstractCommentEditFragment extends Fragment {
 
     public interface SendCallback {
         void onSend(Editable text);
+
         void onRefresh(boolean force);
     }
 
@@ -66,6 +38,7 @@ public abstract class AbstractCommentEditFragment extends Fragment {
     public abstract void expand();
 
     public abstract void setCommentCount(int count);
+
     public abstract void setUpdating(boolean updating);
 
 }

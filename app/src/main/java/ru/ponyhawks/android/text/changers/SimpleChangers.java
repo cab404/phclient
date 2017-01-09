@@ -34,7 +34,7 @@ public final class SimpleChangers {
     public static final TextChanger LITESPOILER =
             new WrapTextChanger(R.drawable.ic_litespoiler, "<ls>", "</ls>");
     public static final TextChanger SPOILER =
-            new ParamWrapTextChanger("<spoiler>%<end-title/>$</spoiler>", R.drawable.ic_spoiler, R.string.spoiler_title);
+            new NoClipParamWrapTextChanger("<spoiler>%<end-title/>$</spoiler>", R.drawable.ic_spoiler, R.string.spoiler_title);
     public static final TextChanger LINK =
             new ParamWrapTextChanger("<a href='%'>$</a>", R.drawable.ic_link, R.string.link);
     public static final TextChanger VIDEO =

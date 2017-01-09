@@ -1,25 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.ponyhawks.android.fragments.ListFragment">
-
-    <ListView
-        android:nestedScrollingEnabled="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:smoothScrollbar="false"
-        android:id="@+id/list"
-        android:paddingBottom="68dp"
-        android:clipToPadding="false"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:gravity="center"
-        android:layout_margin="3dp"
-        android:id="@+id/colorful_button"
-        />
-
-</FrameLayout>
+    android:clipToPadding="false"
+    android:nestedScrollingEnabled="true"
+    android:paddingBottom="68dp"
+    android:smoothScrollbar="false" />

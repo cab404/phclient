@@ -35,4 +35,5 @@ public class ParamWrapTextChanger extends RequestTextChanger {
     public int getImageResource() {
         return icon_id;
     }
+
 }

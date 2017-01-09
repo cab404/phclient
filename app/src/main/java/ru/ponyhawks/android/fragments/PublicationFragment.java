@@ -397,14 +397,6 @@ public abstract class PublicationFragment extends ListFragment implements
         }
     }
 
-    @OnLongClick(R.id.colorful_button)
-    boolean onRefreshForced() {
-        return true;
-    }
-
-    @Bind(R.id.colorful_button)
-    FloatingActionButton updateButton;
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);

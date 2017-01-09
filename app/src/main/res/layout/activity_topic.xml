@@ -14,11 +14,5 @@
         android:id="@+id/comment_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-    <!--<fragment-->
-    <!--android:id="@+id/comment_editor"-->
-    <!--class="ru.ponyhawks.android.fragments.CommentEditFragment"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--tools:layout="@layout/fragment_comment_edit" />-->
 
 </FrameLayout>
