@@ -68,6 +68,7 @@
     <string name="update">Update</string>
     <string name="reload_page">Reload page</string>
     <string name="load_images_on_cellular">Load images on cellular</string>
+    <string name="blocked_users">Blocked users</string>
 
     <string-array name="exit">
         <item>Yes</item>

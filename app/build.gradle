@@ -13,12 +13,12 @@ android {
         applicationId "ru.ponyhawks.android"
         minSdkVersion 10
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.15.1"
+        versionCode 4
+        versionName "1.17"
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

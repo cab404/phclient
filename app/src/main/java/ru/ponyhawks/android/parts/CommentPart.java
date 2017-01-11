@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +52,9 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     Map<Integer, Integer> ids = new HashMap<>();
     Map<Integer, String> reposts = new HashMap<>();
 
+    public String blockedUsers = "";
     public boolean saveState = true;
+
     Map<Integer, HtmlRipper> savedStates = new HashMap<>();
     private CommentPartCallback callback;
 
@@ -269,6 +270,12 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
         }
     }
 
+    public boolean hidden(Comment newC) {
+        return (newC.author.login != null && blockedUsers.contains(newC.author.login))
+                ||
+                (newC.parent != 0 && hidden(data.get(newC.parent)));
+    }
+
     public interface CommentPartCallback {
         enum Action {
             EDIT, FAV, REPLY, SHARE
@@ -334,6 +341,9 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
      */
     @Override
     public int indexFor(Comment newC, ViewConverter<Comment> converter, ChumrollAdapter adapter) {
+
+        if (hidden(newC)) return -1;
+
         updateIndexes(adapter);
 
         List<Comment> nbrs = collectChildren(newC.parent, adapter);

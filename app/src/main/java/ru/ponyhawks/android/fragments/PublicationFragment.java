@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cab404.chumroll.ChumrollAdapter;
+import com.cab404.chumroll.ViewConverter;
 import com.cab404.libph.data.Comment;
 import com.cab404.libph.data.Type;
 import com.cab404.libph.pages.MainPage;
@@ -38,9 +38,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnLongClick;
 import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.activity.RefreshRatePickerDialog;
 import ru.ponyhawks.android.parts.CommentNumPart;
@@ -50,7 +48,6 @@ import ru.ponyhawks.android.parts.UpdateCommonInfoTask;
 import ru.ponyhawks.android.utils.Meow;
 import ru.ponyhawks.android.utils.MidnightSync;
 import ru.ponyhawks.android.utils.RequestManager;
-import ru.ponyhawks.android.utils.UpdateDrawable;
 
 /**
  * Well, sorry for no comments here!
@@ -106,6 +103,9 @@ public abstract class PublicationFragment extends ListFragment implements
         commentPart = new CommentPart();
         commentPart.setCallback(this);
         commentPart.saveState = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("saveCommentState", true);
+        commentPart.blockedUsers = PreferenceManager
+                .getDefaultSharedPreferences(getContext())
+                .getString("blockedUsers", "");
 
         final CommentNumPart commentNumPart = new CommentNumPart();
         adapter.prepareFor(commentPart, new LoadingPart(), commentNumPart);
@@ -116,7 +116,14 @@ public abstract class PublicationFragment extends ListFragment implements
 
         bindModules(sync);
         sync
-                .bind(MainPage.BLOCK_COMMENT, commentPart)
+                .bind(MainPage.BLOCK_COMMENT, commentPart, new MidnightSync.InsertionRule<Comment>() {
+                    @Override
+                    public int indexFor(Comment newC, ViewConverter<Comment> converter, ChumrollAdapter adapter) {
+                        if (commentPart.hidden(newC))
+                            return -1;
+                        return -2;
+                    }
+                })
                 .bind(MainPage.BLOCK_COMMENT_NUM, commentNumPart);
         fullReload();
         if (commentFragment != null)

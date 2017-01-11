@@ -17,6 +17,10 @@
         android:key="textSelectable"
         android:title="@string/select_text" />
 
+    <EditTextPreference
+        android:key="blockedUsers"
+        android:title="@string/blocked_users"/>
+
     <PreferenceCategory android:title="@string/app" />
     <CheckBoxPreference
         android:key="forceRussian"
