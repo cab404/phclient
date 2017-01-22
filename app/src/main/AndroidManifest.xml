@@ -20,17 +20,19 @@
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="keyboard|orientation|screenSize"
-            android:launchMode="singleTask">
-        </activity>
+            android:launchMode="singleTask"></activity>
 
-        <activity android:name=".activity.ProfileActivity"
-            android:configChanges="keyboard|orientation|screenSize"
-            >
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:configChanges="keyboard|orientation|screenSize">
             <intent-filter>
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="http" android:host="ponyhawks.ru/profile" />
+                <data
+                    android:host="ponyhawks.ru/profile"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
 
@@ -76,12 +78,12 @@
             <intent-filter>
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <action android:name="android.intent.action.VIEW" />
                 <data
-                    android:scheme="https"
                     android:host="ponyhawks.ru"
                     android:pathPattern=".*"
-                    />
+                    android:scheme="https" />
             </intent-filter>
 
         </activity>
@@ -89,6 +91,17 @@
         <meta-data
             android:name="imgur-api-key"
             android:value="a2729ecb14b91ba" />
+
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="ru.ponyhawks"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

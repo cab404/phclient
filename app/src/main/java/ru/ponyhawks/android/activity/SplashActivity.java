@@ -1,17 +1,22 @@
 package ru.ponyhawks.android.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
+import android.test.mock.MockApplication;
 import android.text.TextUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cab404.libph.pages.BasePage;
 import com.cab404.libph.requests.LSRequest;
@@ -19,17 +24,18 @@ import com.cab404.libph.requests.LoginRequest;
 import com.cab404.moonlight.framework.Request;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.fragments.LoginFragment;
 import ru.ponyhawks.android.parts.UpdateCommonInfoTask;
+import ru.ponyhawks.android.statics.App;
 import ru.ponyhawks.android.statics.Providers;
 import ru.ponyhawks.android.utils.Meow;
 import ru.ponyhawks.android.utils.RequestManager;
@@ -71,6 +77,8 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+
+//        checkLogs();
 
         msg(HAWK);
         try {
@@ -148,6 +156,24 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
                 threadLoginSeq();
             }
         }.start();
+    }
+
+    private void checkLogs() {
+
+        File logfolder = new File(getFilesDir(), "logs");
+        if (!logfolder.exists()) logfolder.mkdir();
+
+        for (File file : logfolder.listFiles()) {
+            Intent email = new Intent(Intent.ACTION_SEND);
+            email.setType("text/plain");
+            email.putExtra(Intent.EXTRA_SUBJECT,
+                    "phclient v" + ((App) getApplication()).appv + " crash on "
+                            + Build.PRODUCT +
+                            ", API " + Build.VERSION.SDK_INT);
+            email.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, "ru.ponyhawks", file));
+            startActivity(Intent.createChooser(email, "Отправить логи"));
+
+        }
     }
 
     void syncLogin() {
@@ -337,8 +363,7 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
                 } catch (InterruptedException ignored) {
                 }
                 finish();
-            }
-            else{
+            } else {
                 msg("retrying in 3 seconds");
                 try {
                     Thread.sleep(3000);

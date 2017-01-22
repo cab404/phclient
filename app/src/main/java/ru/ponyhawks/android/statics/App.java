@@ -1,30 +1,22 @@
 package ru.ponyhawks.android.statics;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
+import android.support.v4.content.FileProvider;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Locale;
-
-import ru.ponyhawks.android.R;
 
 /**
  * Well, sorry for no comments here!
@@ -36,7 +28,7 @@ import ru.ponyhawks.android.R;
  */
 public class App extends Application {
 
-    String appv = "unknown";
+    public String appv = "unknown";
 
     @Override
     public void onCreate() {
@@ -65,38 +57,51 @@ public class App extends Application {
                     getResources().getDisplayMetrics()
             );
         }
-//
-//        Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-//
-//            File errsave = new File(Environment.getExternalStorageDirectory(), "pherrlog.txt");
-//
-//            @Override
-//            public void uncaughtException(Thread thread, Throwable ex) {
-//                try {
-//                    final PrintWriter writer = new PrintWriter(new FileOutputStream(errsave));
-//                    ex.printStackTrace(writer);
-//                    writer.close();
-//                } catch (FileNotFoundException e) {
-//                    throw new RuntimeException("Error while writing error :/", e);
-//                }
-//
-//                Intent email = new Intent(Intent.ACTION_SEND);
-//                email.setType("text/plain");
-//                email.putExtra(Intent.EXTRA_EMAIL, new String[]{"me@cab404.ru"});
-//                email.putExtra(Intent.EXTRA_SUBJECT,
-//                        "phclient v" + appv + " crash on "
-//                                + Build.PRODUCT +
-//                                ", API " + Build.VERSION.SDK_INT);
-//
-//                email.putExtra(Intent.EXTRA_TEXT, "well, we've crashed. i'm not even sorry.\n" + ex.getLocalizedMessage());
-//                email.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(errsave));
-//                email.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(email);
-//
-//                throw new RuntimeException();
-//            }
-//
-//        });
+
+        final Thread.UncaughtExceptionHandler handler = Thread.currentThread().getUncaughtExceptionHandler();
+        Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+
+            @Override
+            public void uncaughtException(Thread thread, Throwable ex) {
+
+                File logfolder = new File(getFilesDir(), "logs");
+                if (!logfolder.exists()) logfolder.mkdir();
+
+                int index = 0;
+                File errsave;
+                do errsave = new File(logfolder, "pherrlog-" + index++ + ".txt");
+                while (errsave.exists());
+
+                try {
+                    final PrintWriter writer = new PrintWriter(new FileOutputStream(errsave));
+                    ex.printStackTrace(writer);
+                    writer.close();
+                } catch (FileNotFoundException e) {
+                }
+
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.setType("text/plain");
+                email.putExtra(Intent.EXTRA_SUBJECT,
+                        "phclient v" + appv + " crash on "
+                                + Build.PRODUCT +
+                                ", API " + Build.VERSION.SDK_INT);
+                email.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(App.this, "ru.ponyhawks", errsave));
+                email.putExtra(Intent.EXTRA_EMAIL, "me@cab404.ru");
+
+                final Intent intent = Intent.createChooser(email, "Отправить логи");
+
+                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                am.set(
+                        AlarmManager.ELAPSED_REALTIME_WAKEUP, 0,
+                        PendingIntent.getActivity(
+                                App.this, 4567874, intent, PendingIntent.FLAG_ONE_SHOT
+                        )
+                );
+
+                thread.getThreadGroup().uncaughtException(thread, ex);
+            }
+
+        });
 
     }
 
