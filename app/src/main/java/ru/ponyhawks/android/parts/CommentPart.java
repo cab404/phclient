@@ -263,7 +263,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     }
 
     public boolean hidden(Comment newC) {
-        return (newC.deleted && blockUsers);
+        return (newC == null) || (newC.deleted && blockUsers);
     }
 
     public interface CommentPartCallback {
