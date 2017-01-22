@@ -117,6 +117,6 @@
     <string name="update">Обновить</string>
     <string name="reload_page">Обновить страницу</string>
     <string name="load_images_on_cellular">Загружать картинки с мобильной сети</string>
-    <string name="blocked_users">Заблокированные пользователи</string>
+    <string name="block_users">Прятать ветки с заблокированными</string>
 
 </resources>

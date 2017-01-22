@@ -137,10 +137,12 @@ public class EditorFragment extends AbstractCommentEditFragment {
     }
 
     private void changeLayout(float slideOffset) {
-        ((RelativeLayout.LayoutParams) send.getLayoutParams()).topMargin = 0;//(int) (dp42 * (1 - slideOffset));
-        ((RelativeLayout.LayoutParams) instrumentsScroll.getLayoutParams()).rightMargin = (int) (dp42 * slideOffset);
-        ((RelativeLayout.LayoutParams) text.getLayoutParams()).rightMargin = (int) (dp42 * (1 - slideOffset));
-        ((RelativeLayout.LayoutParams) text.getLayoutParams()).topMargin = (int) (dp42 * (slideOffset));
+        ((RelativeLayout.LayoutParams) instrumentsScroll.getLayoutParams()).rightMargin = 0; //(int) (dp42 * slideOffset);
+        ((RelativeLayout.LayoutParams) text.getLayoutParams()).rightMargin = (int) dp42; //(int) (dp42 * (1 - slideOffset));
+        ((RelativeLayout.LayoutParams) send.getLayoutParams()).topMargin = 0; //(int) (dp42 * (slideOffset));
+
+        ((RelativeLayout.LayoutParams) instrumentsScroll.getLayoutParams()).topMargin = (int) -(dp42 * (1 - slideOffset));
+
         ((CoordinatorLayout.LayoutParams) editorRoot.getLayoutParams()).rightMargin = (int) (dp72 * (1 - slideOffset));
         ViewCompat.setAlpha(instrumentsScroll, slideOffset);
         editorWindow.requestLayout();

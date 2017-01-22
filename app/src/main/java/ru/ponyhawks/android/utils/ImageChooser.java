@@ -125,7 +125,7 @@ public class ImageChooser {
                                 textInput.setOnClick(new LineInputDialog.OnConfirmListener() {
                                     @Override
                                     public boolean onConfirm(EditText text) {
-                                        handler.handleImage(text.toString());
+                                        handler.handleImage(text.getText().toString());
                                         return true;
                                     }
                                 });

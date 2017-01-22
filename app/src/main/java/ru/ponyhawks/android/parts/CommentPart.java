@@ -52,7 +52,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     Map<Integer, Integer> ids = new HashMap<>();
     Map<Integer, String> reposts = new HashMap<>();
 
-    public String blockedUsers = "";
+    public boolean blockUsers = false;
     public boolean saveState = true;
 
     Map<Integer, HtmlRipper> savedStates = new HashMap<>();
@@ -103,14 +103,6 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
 
     protected int levelOf(int id) {
         return levelOf(id, 0);
-    }
-
-    /**
-     * Sets new base index (where the tree starts).
-     * Needed for when you add to empty tree by
-     */
-    public void setBaseIndex(int index) {
-        baseIndex = index;
     }
 
     int savedOffset = 0;
@@ -271,9 +263,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     }
 
     public boolean hidden(Comment newC) {
-        return (newC.author.login != null && blockedUsers.contains(newC.author.login))
-                ||
-                (newC.parent != 0 && hidden(data.get(newC.parent)));
+        return (newC.deleted && blockUsers);
     }
 
     public interface CommentPartCallback {

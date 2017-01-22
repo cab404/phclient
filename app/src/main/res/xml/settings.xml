@@ -17,9 +17,9 @@
         android:key="textSelectable"
         android:title="@string/select_text" />
 
-    <EditTextPreference
-        android:key="blockedUsers"
-        android:title="@string/blocked_users"/>
+    <CheckBoxPreference
+        android:key="blockUsers"
+        android:title="@string/block_users"/>
 
     <PreferenceCategory android:title="@string/app" />
     <CheckBoxPreference

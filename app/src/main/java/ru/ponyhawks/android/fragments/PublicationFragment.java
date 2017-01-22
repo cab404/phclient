@@ -103,9 +103,9 @@ public abstract class PublicationFragment extends ListFragment implements
         commentPart = new CommentPart();
         commentPart.setCallback(this);
         commentPart.saveState = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("saveCommentState", true);
-        commentPart.blockedUsers = PreferenceManager
+        commentPart.blockUsers = PreferenceManager
                 .getDefaultSharedPreferences(getContext())
-                .getString("blockedUsers", "");
+                .getBoolean("blockUsers", false);
 
         final CommentNumPart commentNumPart = new CommentNumPart();
         adapter.prepareFor(commentPart, new LoadingPart(), commentNumPart);

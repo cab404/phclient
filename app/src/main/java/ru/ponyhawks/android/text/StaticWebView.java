@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.LinearLayout;
 
 /**
@@ -54,7 +55,11 @@ public class StaticWebView extends LinearLayout {
     public HtmlRipper setText(String text) {
         boundRipper = new HtmlRipper(this);
         parametrize();
-        boundRipper.escape(text);
+        try {
+            boundRipper.escape(text);
+        } catch (Exception e) {
+            Log.e("HtmlRipper", "Had failed to escape " + text, e);
+        }
         return boundRipper;
     }
 
