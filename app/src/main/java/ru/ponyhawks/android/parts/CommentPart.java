@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -331,8 +332,16 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
      */
     @Override
     public int indexFor(Comment newC, ViewConverter<Comment> converter, ChumrollAdapter adapter) {
+        updateIndexes(adapter);
 
-        if (hidden(newC)) return -1;
+        if (hidden(newC))
+            return MidnightSync.INDEX_REMOVE;
+        if (newC.parent != 0 && ids.get(newC.parent) == null) {
+            Log.e("CM ADD ERROR", "ERROR WHILE SEARCHING PARENT WITH ID " + newC.parent);
+            Log.e("CM ADD ERROR", "TREE DATA: " + ids);
+
+            return MidnightSync.INDEX_REMOVE;
+        }
 
         updateIndexes(adapter);
 
