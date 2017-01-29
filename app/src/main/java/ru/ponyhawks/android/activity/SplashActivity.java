@@ -1,6 +1,5 @@
 package ru.ponyhawks.android.activity;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,10 +12,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
-import android.test.mock.MockApplication;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cab404.libph.pages.BasePage;
 import com.cab404.libph.requests.LSRequest;
@@ -78,7 +76,6 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
 
-//        checkLogs();
 
         msg(HAWK);
         try {
@@ -88,6 +85,12 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
         }
         msg("=======");
         msg("starting login sequence");
+
+//        if (true) {
+//            checkLogs();
+//            finish();
+//            return;
+//        }
 
         new Thread() {
             @Override
@@ -163,7 +166,9 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
         File logfolder = new File(getFilesDir(), "logs");
         if (!logfolder.exists()) logfolder.mkdir();
 
+
         for (File file : logfolder.listFiles()) {
+//            msg(FileProvider.getUriForFile(this, "ru.ponyhawks", file).toString());
             Intent email = new Intent(Intent.ACTION_SEND);
             email.setType("text/plain");
             email.putExtra(Intent.EXTRA_SUBJECT,
@@ -174,6 +179,7 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
             startActivity(Intent.createChooser(email, "Отправить логи"));
 
         }
+
     }
 
     void syncLogin() {
@@ -321,6 +327,7 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
     void msg(final String message) {
         synchronized (messages) {
             messages.append(message).append('\n');
+            Log.d("SplashActivity", message);
         }
         handler.post(new Runnable() {
             @Override

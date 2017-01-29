@@ -117,7 +117,14 @@ public class MidnightSync extends UniteSyncronization implements ModularBlockPar
     }
 
 
+    public static final int INDEX_REMOVE = -1;
+    public static final int INDEX_END = -2;
+
     public interface InsertionRule<V> {
+        /**
+         * @see #INDEX_END
+         * @see #INDEX_REMOVE
+         */
         int indexFor(V object, ViewConverter<V> converter, ChumrollAdapter adapter);
     }
 

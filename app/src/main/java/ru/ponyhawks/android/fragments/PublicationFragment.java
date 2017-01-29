@@ -256,6 +256,15 @@ public abstract class PublicationFragment extends ListFragment implements
     }
 
     public void fullReload() {
+        if (commentFragment == null) {
+            sync.post(new Runnable() {
+                @Override
+                public void run() {
+                    fullReload();
+                }
+            });
+            return;
+        }
         updating = true;
         commentFragment.setUpdating(true);
         adapter.clear();
