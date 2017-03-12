@@ -9,9 +9,11 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.FileProvider;
 
+import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import io.fabric.sdk.android.Fabric;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -33,6 +35,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         Providers.Preferences.getInstance().init(this);
         Providers.Profile.getInstance().init(this);
@@ -58,50 +61,50 @@ public class App extends Application {
             );
         }
 
-        final Thread.UncaughtExceptionHandler handler = Thread.currentThread().getUncaughtExceptionHandler();
-        Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-
-            @Override
-            public void uncaughtException(Thread thread, Throwable ex) {
-
-                File logfolder = new File(getFilesDir(), "logs");
-                if (!logfolder.exists()) logfolder.mkdir();
-
-                int index = 0;
-                File errsave;
-                do errsave = new File(logfolder, "pherrlog-" + index++ + ".txt");
-                while (errsave.exists());
-
-                try {
-                    final PrintWriter writer = new PrintWriter(new FileOutputStream(errsave));
-                    ex.printStackTrace(writer);
-                    writer.close();
-                } catch (FileNotFoundException e) {
-                }
-
-                Intent email = new Intent(Intent.ACTION_SEND);
-                email.setType("text/plain");
-                email.putExtra(Intent.EXTRA_SUBJECT,
-                        "phclient v" + appv + " crash on "
-                                + Build.PRODUCT +
-                                ", API " + Build.VERSION.SDK_INT);
-                email.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(App.this, "ru.ponyhawks", errsave));
-                email.putExtra(Intent.EXTRA_EMAIL, "me@cab404.ru");
-
-                final Intent intent = Intent.createChooser(email, "Отправить логи");
-
-                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-                am.set(
-                        AlarmManager.ELAPSED_REALTIME_WAKEUP, 0,
-                        PendingIntent.getActivity(
-                                App.this, 4567874, intent, PendingIntent.FLAG_ONE_SHOT
-                        )
-                );
-
-                thread.getThreadGroup().uncaughtException(thread, ex);
-            }
-
-        });
+//        final Thread.UncaughtExceptionHandler handler = Thread.currentThread().getUncaughtExceptionHandler();
+//        Thread.currentThread().setUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+//
+//            @Override
+//            public void uncaughtException(Thread thread, Throwable ex) {
+//
+//                File logfolder = new File(getFilesDir(), "logs");
+//                if (!logfolder.exists()) logfolder.mkdir();
+//
+//                int index = 0;
+//                File errsave;
+//                do errsave = new File(logfolder, "pherrlog-" + index++ + ".txt");
+//                while (errsave.exists());
+//
+//                try {
+//                    final PrintWriter writer = new PrintWriter(new FileOutputStream(errsave));
+//                    ex.printStackTrace(writer);
+//                    writer.close();
+//                } catch (FileNotFoundException e) {
+//                }
+//
+//                Intent email = new Intent(Intent.ACTION_SEND);
+//                email.setType("text/plain");
+//                email.putExtra(Intent.EXTRA_SUBJECT,
+//                        "phclient v" + appv + " crash on "
+//                                + Build.PRODUCT +
+//                                ", API " + Build.VERSION.SDK_INT);
+//                email.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(App.this, "ru.ponyhawks", errsave));
+//                email.putExtra(Intent.EXTRA_EMAIL, "me@cab404.ru");
+//
+//                final Intent intent = Intent.createChooser(email, "Отправить логи");
+//
+//                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+//                am.set(
+//                        AlarmManager.ELAPSED_REALTIME_WAKEUP, 0,
+//                        PendingIntent.getActivity(
+//                                App.this, 4567874, intent, PendingIntent.FLAG_ONE_SHOT
+//                        )
+//                );
+//
+//                thread.getThreadGroup().uncaughtException(thread, ex);
+//            }
+//
+//        });
 
     }
 

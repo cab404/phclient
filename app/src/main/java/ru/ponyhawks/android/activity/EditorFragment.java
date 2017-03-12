@@ -195,6 +195,8 @@ public class EditorFragment extends AbstractCommentEditFragment {
             });
             instrumentsLayout.addView(button);
         }
+
+        changeLayout(0);
     }
 
     private Editable chainAffect(Editable in) {
