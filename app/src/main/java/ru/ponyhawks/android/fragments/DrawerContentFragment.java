@@ -37,7 +37,8 @@ public class DrawerContentFragment extends ListFragment implements Observer {
             ID_FAVOURITES = 2,
             ID_PUBLICATIONS = 3,
             ID_EXIT = 4,
-            ID_MAIN = 5;
+            ID_MAIN = 5,
+            ID_BLOGS = 6;
 
     public DrawerContentFragment() {
         adapter = new ChumrollAdapter();
@@ -95,6 +96,7 @@ public class DrawerContentFragment extends ListFragment implements Observer {
         points.add(new DrawerEntryPart.Data(getActivity().getString(R.string.main_page_label), ID_MAIN));
         points.add(new DrawerEntryPart.Data(getActivity().getString(R.string.messages_label), ID_MESSAGES, info.new_messages));
         points.add(new DrawerEntryPart.Data(getActivity().getString(R.string.publications_label), ID_PUBLICATIONS));
+        points.add(new DrawerEntryPart.Data(getString(R.string.blogs_label), ID_BLOGS));
         points.add(new DrawerEntryPart.Data(getActivity().getString(R.string.favourites), ID_FAVOURITES));
         points.add(new DrawerEntryPart.Data(getActivity().getString(R.string.settings_label), ID_SETTINGS));
         points.add(new DrawerEntryPart.Data(getActivity().getString(R.string.logout_label), ID_EXIT));

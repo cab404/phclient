@@ -8,11 +8,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.cab404.libph.data.CommonInfo;
 
 import ru.ponyhawks.android.R;
+import ru.ponyhawks.android.fragments.BlogListFragment;
 import ru.ponyhawks.android.fragments.DrawerContentFragment;
 import ru.ponyhawks.android.fragments.FavouritesFragment;
 import ru.ponyhawks.android.fragments.LetterListFragment;
@@ -71,6 +73,11 @@ public class MainActivity extends LoginDependentActivity implements DrawerConten
 
     @Override
     public void onDrawerItemSelected(int id) {
+
+        while (getSupportFragmentManager().popBackStackImmediate()) {
+            Log.v("Stack", "Pop!");
+        }
+
         Fragment use = null;
         if (currentSection == id)
             return;
@@ -89,6 +96,9 @@ public class MainActivity extends LoginDependentActivity implements DrawerConten
                 break;
             case DrawerContentFragment.ID_SETTINGS:
                 startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case DrawerContentFragment.ID_BLOGS:
+                use = new BlogListFragment();
                 break;
             case DrawerContentFragment.ID_MESSAGES:
                 use = LetterListFragment.getInstance();

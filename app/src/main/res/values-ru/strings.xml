@@ -118,5 +118,6 @@
     <string name="reload_page">Обновить страницу</string>
     <string name="load_images_on_cellular">Загружать картинки с мобильной сети</string>
     <string name="block_users">Прятать ветки с заблокированными</string>
+    <string name="blogs_label">Блоги</string>
 
 </resources>

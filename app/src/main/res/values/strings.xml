@@ -69,6 +69,7 @@
     <string name="reload_page">Reload page</string>
     <string name="load_images_on_cellular">Load images on cellular</string>
     <string name="block_users">Hide threads with blocked users</string>
+    <string name="blogs_label">Blogs</string>
 
     <string-array name="exit">
         <item>Yes</item>
