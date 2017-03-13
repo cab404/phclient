@@ -512,15 +512,18 @@ public class HtmlRipper {
                             );
 
                             int width, height;
-                            if (tag.get("width").isEmpty())
-                                width = (int) (layout.getWidth() * 0.9f);
-                            else
-                                width = Integer.parseInt(tag.get("width"));
 
-                            if (tag.get("height").isEmpty())
-                                height = -1;//(int) (layout.getWidth() * 0.6f);
-                            else
+                            try {
+                                width = Integer.parseInt(tag.get("width"));
+                            } catch (NumberFormatException e) {
+                                width = (int) (layout.getWidth() * 0.9f);
+                            }
+
+                            try {
                                 height = Integer.parseInt(tag.get("height"));
+                            } catch (NumberFormatException e) {
+                                height = -1;//(int) (layout.getWidth() * 0.6f);
+                            }
 
                             final SpanImageListener imageAware = new SpanImageListener(target, replacer, builder);
                             ImageSize size = new ImageSize(width, height);
@@ -815,7 +818,7 @@ public class HtmlRipper {
     }
 
 
-    private static class SpanIgnoringTextView extends TextView {
+    private static class SpanIgnoringTextView extends android.support.v7.widget.AppCompatTextView {
 
         public SpanIgnoringTextView(Context context) {
             super(context);
