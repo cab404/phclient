@@ -8,12 +8,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcel;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.AbstractMap;
@@ -103,10 +103,27 @@ public class Meow {
         return new AbstractMap.SimpleEntry<>(topicId, target);
     }
 
+    public static int sanitizeIndex(int index, Editable editable) {
+        return index < 0 ? 0 : index > editable.length() ? editable.length() : index;
+    }
+
     private static class TagColoring extends ForegroundColorSpan {
+        public static final Creator<TagColoring> CREATOR = new Creator<TagColoring>() {
+            @Override
+            public TagColoring createFromParcel(Parcel source) {
+                return new TagColoring(source.readInt());
+            }
+
+            @Override
+            public TagColoring[] newArray(int size) {
+                return new TagColoring[size];
+            }
+        };
+
         public TagColoring(int color) {
             super(color);
         }
+
     }
 
     private static final int
@@ -121,7 +138,9 @@ public class Meow {
         final int tagColor = 0xff888888;
 
         for (TagColoring c : editable.getSpans(0, editable.length(), TagColoring.class))
-            editable.removeSpan(c);
+            // actually important, some crashes are associated with that
+            if (editable.getSpanEnd(c) <= editable.length())
+                editable.removeSpan(c);
 
         for (int i = 0; i < editable.length(); i++) {
             final char cChr = editable.charAt(i);
@@ -141,7 +160,7 @@ public class Meow {
                             editable.setSpan(
                                     new TagColoring(tagColor),
                                     startTag,
-                                    i + 1,
+                                    sanitizeIndex(i + 1, editable),
                                     Spanned.SPAN_INCLUSIVE_EXCLUSIVE
                             );
                             break;

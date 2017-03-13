@@ -2,7 +2,10 @@ package ru.ponyhawks.android.text.changers;
 
 import android.support.annotation.DrawableRes;
 import android.text.Editable;
+import android.util.Log;
 import android.widget.EditText;
+
+import ru.ponyhawks.android.utils.Meow;
 
 /**
  * Well, sorry for no comments here!
@@ -34,9 +37,14 @@ public class WrapTextChanger extends SimpleTextChanger {
 
     @Override
     public void change(int start, int end, EditText text) {
+
+        Log.d("LunaLog", "change() called with: start = [" + start + "], end = [" + end + "], text = [" + text.getText() + "]");
+
         Editable editable = text.getText();
-        editable.insert(end < 0 ? 0 : end, this.end);
-        editable.insert(start < 0 ? 0 : start, this.start);
+        System.out.println(editable.length());
+        editable.insert(Meow.sanitizeIndex(end, editable), this.end);
+        System.out.println(editable.length());
+        editable.insert(Meow.sanitizeIndex(start, editable), this.start);
         text.setText(editable);
 
         int newStart = start + this.start.length();

@@ -51,6 +51,9 @@ public abstract class RequestTextChanger implements TextChanger {
 
         text.replace(ss, se, ready);
 
+        // Updating, just to be sure that editable won't go OOB on selection
+        ed.setText(text);
+
         if (insi == -1)
             if (ss != se)
                 ed.setSelection(seli + ss, seli + ss + ready.length());

@@ -11,6 +11,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnLongClick;
-import butterknife.OnTextChanged;
 import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.fragments.AbstractCommentEditFragment;
 import ru.ponyhawks.android.text.changers.ImportImageTextChanger;
@@ -196,6 +196,23 @@ public class EditorFragment extends AbstractCommentEditFragment {
             instrumentsLayout.addView(button);
         }
 
+        text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Meow.tintTags(s);
+            }
+        });
+
         changeLayout(0);
     }
 
@@ -277,12 +294,6 @@ public class EditorFragment extends AbstractCommentEditFragment {
     public void setUpdating(boolean updating) {
         if (spinningWheel != null)
             spinningWheel.setSpinning(updating);
-    }
-
-
-    @OnTextChanged(R.id.text)
-    void textChanged(CharSequence text){
-        Meow.tintTags((Editable) text);
     }
 
     @OnFocusChange(R.id.text)

@@ -13,6 +13,7 @@ import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import io.fabric.sdk.android.BuildConfig;
 import io.fabric.sdk.android.Fabric;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -35,7 +36,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+        if (!BuildConfig.DEBUG)
+            Fabric.with(this, new Crashlytics());
 
         Providers.Preferences.getInstance().init(this);
         Providers.Profile.getInstance().init(this);
