@@ -256,7 +256,10 @@ public class HtmlRipper {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         isCellNetwork = (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE);
-        boolean loadImagesFinal = this.loadImages && (loadOnCellular || !isCellNetwork);
+
+
+        boolean loadImagesFinal = this.loadImages;// && (loadOnCellular || !isCellNetwork);
+        if (loadImagesFinal && isCellNetwork) loadImagesFinal = loadOnCellular;
 
         /*
          * Исправляем проблему с header-ом.
@@ -540,9 +543,9 @@ public class HtmlRipper {
                                     .imageScaleType(ImageScaleType.EXACTLY).build();
 
                             if (loadImagesFinal) {
-                                if (ImageLoader.getInstance().getDiskCache().get(src) == null)
-                                    ImageLoader.getInstance().loadImage(src, size, opt, imageAware);
-                                else
+//                                if (ImageLoader.getInstance().getDiskCache().get(src) == null)
+//                                    ImageLoader.getInstance().loadImage(src, size, opt, imageAware);
+//                                else
                                     ImageLoader.getInstance().displayImage(
                                             src,
                                             new NonViewAware(src, size, ViewScaleType.FIT_INSIDE),
