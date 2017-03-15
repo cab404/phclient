@@ -235,6 +235,17 @@ public class HtmlRipper {
     /* ... */
     private final static String header_end = "</header>\r\n\n\t\n\t\t\t";
 
+    private String fixUrl(String link) {
+        if (!link.isEmpty()) {
+            if (link.startsWith("//"))
+                link = scheme + ":" + link;
+            if (link.startsWith("/"))
+                link = scheme + "://" + hostname + link;
+        }
+        return link;
+    }
+
+
     /**
      * Превращает HTML в понятный Android-у CharSequence и пихает его в данный ему TextView.
      */
@@ -339,15 +350,10 @@ public class HtmlRipper {
                             );
                             break;
                         case "a":
-                            String link = tag.get("href");
+                            String link = fixUrl(tag.get("href"));
 
                             if (link.isEmpty())
                                 continue;
-
-                            if (link.startsWith("//"))
-                                link = scheme + ":" + link;
-                            if (link.startsWith("/"))
-                                link = scheme + "://" + hostname + link;
 
                             builder.setSpan(
                                     new URLSpan(link),
@@ -485,7 +491,7 @@ public class HtmlRipper {
                             final String repl = "I";
                             builder.insert(off + tag.start, repl);
 
-                            final String src = tag.get("src");
+                            final String src = fixUrl(tag.get("src"));
 
                             Drawable dr = context.getResources().getDrawable(replacerImage);
                             if (dr != null)
