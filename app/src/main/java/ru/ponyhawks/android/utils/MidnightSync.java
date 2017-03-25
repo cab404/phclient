@@ -17,6 +17,15 @@ import java.util.Map;
  */
 public class MidnightSync extends UniteSyncronization implements ModularBlockParser.ParsedObjectHandler {
 
+    /**
+     * Drops th item
+     */
+    public static final int INDEX_REMOVE = -1;
+    /**
+     * Adds item to the end
+     */
+    public static final int INDEX_END = -2;
+
     private final Map<Integer, Binding> bindings;
     private final ChumrollAdapter target;
 
@@ -79,10 +88,12 @@ public class MidnightSync extends UniteSyncronization implements ModularBlockPar
             if (rule == null)
                 target.add(converter, ((Clazz) object));
             else {
-                final int index = rule.indexFor((Clazz) object, converter, target);
-                if (index == -1)
+                int index = rule.indexFor((Clazz) object, converter, target);
+                if (index == target.getCount()) index = INDEX_END;
+
+                if (index == INDEX_REMOVE)
                     return;
-                if (index == -2) {
+                if (index == INDEX_END) {
                     target.add(
                             converter,
                             (Clazz) object
@@ -115,10 +126,6 @@ public class MidnightSync extends UniteSyncronization implements ModularBlockPar
             binding.insert(object);
         }
     }
-
-
-    public static final int INDEX_REMOVE = -1;
-    public static final int INDEX_END = -2;
 
     public interface InsertionRule<V> {
         /**

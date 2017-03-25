@@ -75,6 +75,7 @@
         <item>Пони - Аллах Темной Стороны</item>
         <item>Мундансер</item>
         <item>Тёмная сторона Мундансер</item>
+        <item>Зе Флаффл Пафф</item>
     </string-array>
 
     <string-array name="pub_pager_titles">
@@ -87,19 +88,21 @@
         <item>Выбрать из галереи</item>
         <item>Ввести ссылку</item>
     </string-array>
+
     <string name="continuous_refresh">Автообновление</string>
     <string name="interval_1000_years">Примерно каждую тысячу лет</string>
-    <string name="interval_10_seconds">Чуть чаще, чем иногда</string>
+    <string name="interval_10_seconds">Раз в 10 секунд</string>
     <string name="interval_13_seconds">Каждые 13 секунд</string>
-    <string name="interval_15_seconds">Иногда</string>
+    <string name="interval_15_seconds">Раз в 15 секунд</string>
     <string name="interval_1_day">Каждый день</string>
     <string name="interval_1_minute">Каждую минуту</string>
     <string name="interval_30_seconds">Дважды в минуту</string>
     <string name="interval_413_seconds">К4ЖДЫ3 413 С3КУНД</string>
     <string name="interval_42_seconds">Каждые 42 секунды</string>
     <string name="interval_5_seconds">Каждые пять секунд</string>
-    <string name="interval_65536_ms">Каждые 1000000000000000₂ миллисекунд</string>
+    <string name="interval_65536_ms">Каждые 65536 миллисекунд</string>
     <string name="interval_9000_ms">Каждые 9000 миллисекунд</string>
+
     <string name="show_delimiters">Показывать разделители</string>
     <string name="delete">Удалить</string>
     <string name="markread">Пометить как прочитанное</string>
@@ -119,5 +122,9 @@
     <string name="load_images_on_cellular">Загружать картинки с мобильной сети</string>
     <string name="block_users">Прятать ветки с заблокированными</string>
     <string name="blogs_label">Блоги</string>
+    <string name="auto_autoupdate">Включать автообновление автоматически</string>
+    <string name="hide_topic_instead_of_closing">Прятать топик при нажатии \"Назад\"</string>
+    <string name="show_notification_replies">Показывать уведомления при новых ответах</string>
+    <string name="continuous_refresh_settings">Переодичность автообновления</string>
 
 </resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:drawable="@drawable/anim_loading_fluffle_0" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_1" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_2" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_3" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_4" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_5" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_6" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_7" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_8" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_9" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_10" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_11" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_12" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_13" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_14" android:duration="50"/>
+	<item android:drawable="@drawable/anim_loading_fluffle_15" android:duration="50"/>
+</animation-list>

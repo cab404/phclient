@@ -21,6 +21,18 @@
         android:key="blockUsers"
         android:title="@string/block_users"/>
 
+    <PreferenceCategory android:title="Notifications"/>
+
+    <CheckBoxPreference
+        android:key="showNotificationsReplies"
+        android:defaultValue="false"
+        android:title="@string/show_notification_replies"/>
+
+    <CheckBoxPreference
+        android:key="autoAutoUpdate"
+        android:defaultValue="false"
+        android:title="@string/auto_autoupdate"/>
+
     <PreferenceCategory android:title="@string/app" />
     <CheckBoxPreference
         android:key="forceRussian"

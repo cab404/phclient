@@ -1,25 +1,17 @@
 package ru.ponyhawks.android.statics;
 
-import android.app.AlarmManager;
 import android.app.Application;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.v4.content.FileProvider;
 
 import com.crashlytics.android.Crashlytics;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import io.fabric.sdk.android.BuildConfig;
-import io.fabric.sdk.android.Fabric;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.util.Locale;
+
+import io.fabric.sdk.android.Fabric;
+import ru.ponyhawks.android.BuildConfig;
 
 /**
  * Well, sorry for no comments here!
@@ -31,8 +23,6 @@ import java.util.Locale;
  */
 public class App extends Application {
 
-    public String appv = "unknown";
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -41,12 +31,6 @@ public class App extends Application {
 
         Providers.Preferences.getInstance().init(this);
         Providers.Profile.getInstance().init(this);
-
-        try {
-            appv = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            throw new RuntimeException("", e);
-        }
 
         final ImageLoaderConfiguration config =
                 new ImageLoaderConfiguration.Builder(this)

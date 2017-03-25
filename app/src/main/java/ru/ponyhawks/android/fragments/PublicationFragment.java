@@ -2,15 +2,25 @@ package ru.ponyhawks.android.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +42,7 @@ import com.cab404.libph.requests.LSRequest;
 import com.cab404.libph.requests.RefreshCommentsRequest;
 import com.cab404.moonlight.framework.ModularBlockParser;
 import com.cab404.moonlight.framework.Page;
+import com.cab404.moonlight.util.SU;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,11 +51,14 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import ru.ponyhawks.android.R;
+import ru.ponyhawks.android.activity.BaseActivity;
 import ru.ponyhawks.android.activity.RefreshRatePickerDialog;
+import ru.ponyhawks.android.activity.ResolverActivity;
 import ru.ponyhawks.android.parts.CommentNumPart;
 import ru.ponyhawks.android.parts.CommentPart;
 import ru.ponyhawks.android.parts.LoadingPart;
 import ru.ponyhawks.android.parts.UpdateCommonInfoTask;
+import ru.ponyhawks.android.statics.Providers;
 import ru.ponyhawks.android.utils.Meow;
 import ru.ponyhawks.android.utils.MidnightSync;
 import ru.ponyhawks.android.utils.RequestManager;
@@ -152,6 +166,14 @@ public abstract class PublicationFragment extends ListFragment implements
                 final int next = newCommentsStack.remove(0);
                 final int index = commentPart.getIndex(next, adapter);
 
+                if (index == -1) {
+                    Toast.makeText(
+                            getContext(),
+                            "Странно, но следующий комментарий не найден .-.",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+
                 list.post(new Runnable() {
                     @Override
                     public void run() {
@@ -183,6 +205,7 @@ public abstract class PublicationFragment extends ListFragment implements
 
     public void update(final boolean clearNew, int selfCommentId) {
         if (updating) return;
+        if (getActivity() == null) return; // occurs a lot of times, actually
         updating = true;
         commentFragment.setUpdating(true);
         commentPart.setSelectedId(0);
@@ -220,8 +243,11 @@ public abstract class PublicationFragment extends ListFragment implements
                                 for (Comment cm : what.comments) {
                                     sync.inject(cm, commentPart, commentPart);
                                     commentPart.register(cm);
-                                    if (cm.is_new)
+                                    if (cm.is_new) {
                                         newCommentsStack.add(cm.id);
+                                    }
+                                    notifyNewComments(cm);
+
                                 }
                                 commentFragment.setCommentCount(newCommentsStack.size());
                             }
@@ -249,10 +275,78 @@ public abstract class PublicationFragment extends ListFragment implements
                 .start();
     }
 
+    private static final String TAG = "PublicationFragment";
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() called");
+        final boolean startAutoUpdate = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("autoAutoUpdate", false);
+        if (startAutoUpdate)
+            onRefreshRatePicked(true, 30000);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart() called");
+        final boolean startAutoUpdate = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("autoAutoUpdate", false);
+        if (startAutoUpdate)
+            onRefreshRatePicked(false, 30000);
+    }
+
+    private void notifyNewComments(Comment cm) {
+        boolean show = false;
+        final boolean showNotificationsReplies = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("showNotificationsReplies", false);
+        if (showNotificationsReplies && cm.parent != 0) {
+            final Comment parent = commentPart.getComment(cm.parent);
+            if (parent != null && parent.author != null && parent.author.login != null) {
+                final String username = Providers.UserInfo.getInstance().getInfo().username;
+                if (parent.author.login.equals(username)) {
+                    show = true;
+                }
+            }
+        }
+
+        if (show && getActivity() != null && !((BaseActivity) getActivity()).isVisible()) {
+            final Notification header = new NotificationCompat.Builder(getContext())
+                    .setGroupSummary(true)
+                    .setGroup("newCommentsFrom" + getLink())
+                    .setSmallIcon(R.drawable.ic_re)
+                    .setAutoCancel(true)
+                    .build();
+            final PendingIntent intent = PendingIntent.getActivity(
+                    getContext(), 42, new Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(getLink(cm)),
+                            getContext(),
+                            ResolverActivity.class
+                    ), PendingIntent.FLAG_UPDATE_CURRENT
+            );
+            final Notification notification = new NotificationCompat.Builder(getContext())
+                    .setContentTitle(cm.author.login)
+                    .setContentText(SU.removeAllTags(cm.text))
+                    .setSubText(getActivity().getTitle())
+                    .setSmallIcon(R.drawable.ic_re)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setVibrate(new long[]{300, 100, 300})
+                    .setGroup("newCommentsFrom" + getLink())
+                    .setAutoCancel(true)
+                    .setContentIntent(intent)
+                    .build();
+
+            NotificationManagerCompat mc = NotificationManagerCompat.from(getContext());
+
+            mc.notify(getLink().hashCode(), header);
+            mc.notify(cm.hashCode(), notification);
+        }
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         commentPart.destroy();
+        onRefreshRatePicked(false, 0);
     }
 
     public void fullReload() {
@@ -351,10 +445,12 @@ public abstract class PublicationFragment extends ListFragment implements
         final int id = item.getItemId();
         switch (id) {
             case R.id.continuous_refresh:
-                final RefreshRatePickerDialog dialog = new RefreshRatePickerDialog(getActivity());
-                dialog.setListener(this);
-                dialog.setState(refreshState);
-                dialog.show();
+                item.setChecked(!item.isChecked());
+                onRefreshRatePicked(item.isChecked(), 30000);
+//                final RefreshRatePickerDialog dialog = new RefreshRatePickerDialog(getActivity());
+//                dialog.setListener(this);
+//                dialog.setState(refreshState);
+//                dialog.show();
                 break;
             case R.id.copy_link:
                 setClipboard(getLink());
@@ -564,11 +660,12 @@ public abstract class PublicationFragment extends ListFragment implements
     }
 
     public void share(Comment cm, Context context) {
-        int id = getArguments().getInt(KEY_ID);
-        final String clip = String.format("http://ponyhawks.ru/blog/%d.html#comment%d", id, cm.id);
+        final String clip = getLink(cm);
         setClipboard(clip);
         Toast.makeText(getActivity(), R.string.comment_link_copied, Toast.LENGTH_SHORT).show();
     }
+
+    protected abstract String getLink(Comment cm);
 
     private void edit(Comment cm, Context context) {
         if (commentFragment.isExpanded()) {

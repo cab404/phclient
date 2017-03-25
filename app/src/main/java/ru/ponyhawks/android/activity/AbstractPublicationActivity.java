@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -22,6 +23,7 @@ public abstract class AbstractPublicationActivity extends LoginDependentActivity
 
     public static final String KEY_ID = "id";
     public static final String KEY_TITLE = "title";
+    private static final String TAG = "AbstractPublicationAct";
 
     AbstractCommentEditFragment ced;
     PublicationFragment topic;
@@ -34,14 +36,21 @@ public abstract class AbstractPublicationActivity extends LoginDependentActivity
     void backToMain() {
         final Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        finish();
+
+        boolean doNotClose = PreferenceManager
+                .getDefaultSharedPreferences(getBaseContext())
+                .getBoolean("backButtonHide", false);
+        if (!doNotClose)
+            finish();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) return;
+        if (savedInstanceState != null) {
+            Log.d(TAG, "onCreate: Got instance state");
+        }
 
         setTitle(getIntent().getStringExtra(KEY_TITLE));
         id = -1;
@@ -113,7 +122,7 @@ public abstract class AbstractPublicationActivity extends LoginDependentActivity
 
     @Override
     public void onBackPressed() {
-        if (ced.isExpanded())
+        if (ced != null && ced.isExpanded())
             ced.collapse();
         else
             backToMain();

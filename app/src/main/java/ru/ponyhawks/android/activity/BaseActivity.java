@@ -1,7 +1,6 @@
 package ru.ponyhawks.android.activity;
 
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +24,24 @@ public class BaseActivity extends AppCompatActivity {
     static final LinkedList<BaseActivity> running = new LinkedList<>();
     RequestManager manager = new RequestManager(Providers.Profile.get());
 
+    private boolean isVisible;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        isVisible = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isVisible = false;
+    }
+
+    public boolean isVisible() {
+        return isVisible;
+    }
+
     private void setupTheme() {
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         final String themeName = sp.getString("theme", "AppThemeDark");
@@ -36,7 +53,7 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-    private void setupLang(){
+    private void setupLang() {
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("forceRussian", false)) {
             getResources().getConfiguration().locale = new Locale("ru");
             getResources().updateConfiguration(
@@ -58,7 +75,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings("unchecked")
-    public static <A extends BaseActivity> List<A> getRunning(Class<A> type){
+    public static <A extends BaseActivity> List<A> getRunning(Class<A> type) {
         List<A> running_activities = new LinkedList<>();
         for (BaseActivity activity : running)
             if (activity.getClass().isAssignableFrom(type))

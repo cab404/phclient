@@ -18,6 +18,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import ru.ponyhawks.android.R;
+import ru.ponyhawks.android.activity.MainActivity;
 import ru.ponyhawks.android.parts.DrawerEntryPart;
 import ru.ponyhawks.android.parts.MoonlitPart;
 import ru.ponyhawks.android.parts.UserHeaderPart;
@@ -101,6 +102,8 @@ public class DrawerContentFragment extends ListFragment implements Observer {
         points.add(new DrawerEntryPart.Data(getActivity().getString(R.string.settings_label), ID_SETTINGS));
         points.add(new DrawerEntryPart.Data(getActivity().getString(R.string.logout_label), ID_EXIT));
         adapter.addAll(DrawerEntryPart.class, points);
+
+        ((MainActivity) getActivity()).setNotificationCircle(info.new_messages > 0);
 
         setAdapter(adapter);
     }

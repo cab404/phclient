@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 
 import com.cab404.chumroll.ChumrollAdapter;
+import com.cab404.libph.data.Comment;
 import com.cab404.libph.data.Topic;
 import com.cab404.libph.data.Type;
 import com.cab404.libph.modules.CommentTreeModule;
@@ -18,6 +19,8 @@ import com.cab404.libph.requests.CommentEditRequest;
 import com.cab404.libph.requests.RefreshCommentsRequest;
 import com.cab404.moonlight.framework.ModularBlockParser;
 import com.cab404.moonlight.framework.Page;
+
+import java.util.Locale;
 
 import ru.ponyhawks.android.parts.TopicPart;
 import ru.ponyhawks.android.utils.Meow;
@@ -51,6 +54,11 @@ public class TopicFragment extends PublicationFragment {
         adapter.prepareFor(new TopicPart());
     }
 
+    @Override
+    protected String getLink(Comment cm) {
+        int id = getArguments().getInt(KEY_ID);
+        return String.format(Locale.US, "https://ponyhawks.ru/blog/%d.html#comment%d", id, cm.id);
+    }
 
     @NonNull
     @Override
@@ -68,19 +76,12 @@ public class TopicFragment extends PublicationFragment {
     @Override
     protected Page getPageRequest() {
         int id = getArguments().getInt(KEY_ID);
-        return new TopicPage(id){
+        return new TopicPage(id) {
             @Override
             protected void bindParsers(ModularBlockParser base) {
                 super.bindParsers(base);
                 base.bind(treeFixer, MID_TREEFIXER);
             }
-
-            @Override
-            public void finished() {
-                super.finished();
-                System.out.println(treeFixer.parents);
-            }
-
         };
     }
 
@@ -118,7 +119,7 @@ public class TopicFragment extends PublicationFragment {
     }
 
     @Override
-    protected String getLink(){
+    protected String getLink() {
         int id = getArguments().getInt(KEY_ID);
         return String.format("http://ponyhawks.ru/blog/%d.html", id);
     }

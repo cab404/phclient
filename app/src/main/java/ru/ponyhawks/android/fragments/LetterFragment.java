@@ -7,15 +7,20 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 
 import com.cab404.chumroll.ChumrollAdapter;
+import com.cab404.libph.data.Comment;
 import com.cab404.libph.data.Letter;
 import com.cab404.libph.data.Type;
+import com.cab404.libph.modules.CommentTreeModule;
 import com.cab404.libph.pages.BasePage;
 import com.cab404.libph.pages.LetterPage;
 import com.cab404.libph.pages.MainPage;
 import com.cab404.libph.requests.CommentAddRequest;
 import com.cab404.libph.requests.CommentEditRequest;
 import com.cab404.libph.requests.RefreshCommentsRequest;
+import com.cab404.moonlight.framework.ModularBlockParser;
 import com.cab404.moonlight.framework.Page;
+
+import java.util.Locale;
 
 import ru.ponyhawks.android.parts.LetterPart;
 import ru.ponyhawks.android.utils.Meow;
@@ -31,6 +36,9 @@ import ru.ponyhawks.android.utils.MidnightSync;
  */
 public class LetterFragment extends PublicationFragment {
 
+    private static final int MID_TREEFIXER = 98765;
+    CommentTreeModule treeFixer = new CommentTreeModule();
+
     public static LetterFragment getInstance(int id) {
         final LetterFragment pfrag = new LetterFragment();
         final Bundle args = new Bundle();
@@ -44,6 +52,12 @@ public class LetterFragment extends PublicationFragment {
     @Override
     void prepareAdapter(ChumrollAdapter adapter) {
         adapter.prepareFor(new LetterPart());
+    }
+
+    @Override
+    protected String getLink(Comment cm) {
+        int id = getArguments().getInt(KEY_ID);
+        return String.format(Locale.US, "https://ponyhawks.ru/talk/%d.html#comment%d", id, cm.id);
     }
 
 
@@ -63,7 +77,13 @@ public class LetterFragment extends PublicationFragment {
     @Override
     protected Page getPageRequest() {
         int id = getArguments().getInt(KEY_ID);
-        return new LetterPage(id);
+        return new LetterPage(id) {
+            @Override
+            protected void bindParsers(ModularBlockParser base) {
+                super.bindParsers(base);
+                base.bind(treeFixer, MID_TREEFIXER);
+            }
+        };
     }
 
     @Override
@@ -85,6 +105,8 @@ public class LetterFragment extends PublicationFragment {
                     }
                 });
                 break;
+            case MID_TREEFIXER:
+                getCommentPart().updateFrom(treeFixer);
         }
     }
 
@@ -98,7 +120,7 @@ public class LetterFragment extends PublicationFragment {
     }
 
     @Override
-    protected String getLink(){
+    protected String getLink() {
         int id = getArguments().getInt(KEY_ID);
         return String.format("http://ponyhawks.ru/talk/%d.html", id);
     }

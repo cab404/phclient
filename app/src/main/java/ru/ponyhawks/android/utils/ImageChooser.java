@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -78,7 +79,7 @@ public class ImageChooser {
                         switch (which) {
                             case TAKE_PHOTO:
 
-                                File store = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                                File store = ctx.getFilesDir();
                                 if (
                                         PackageManager.PERMISSION_GRANTED != ctx.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                                 ||
@@ -93,7 +94,7 @@ public class ImageChooser {
                                     return;
                                 }
 
-                                store = new File(store, ctx.getPackageName());
+                                store = new File(store, "Photos");
                                 try {
                                     if (!store.exists() && !(store.mkdirs() && new File(store, ".nomedia").createNewFile()))
                                         throw new RuntimeException("Cannot create pictures dir");
@@ -104,7 +105,10 @@ public class ImageChooser {
                                 subtarget = new File(store, "IMAGE_" + System.currentTimeMillis() + ".png");
 
                                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(subtarget));
+                                takePictureIntent.putExtra(
+                                        MediaStore.EXTRA_OUTPUT,
+                                        FileProvider.getUriForFile(ctx, "ru.ponyhawks", subtarget)
+                                );
 
                                 act.startActivityForResult(takePictureIntent, REQUEST_CODE_TAKE_PHOTO);
 

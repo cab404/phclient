@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +29,7 @@ import java.net.URL;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import ru.ponyhawks.android.BuildConfig;
 import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.fragments.LoginFragment;
 import ru.ponyhawks.android.parts.UpdateCommonInfoTask;
@@ -78,11 +78,7 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
 
 
         msg(HAWK);
-        try {
-            msg("phclient v" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            msg("version unknown (that is strange)");
-        }
+        msg("phclient v" + BuildConfig.VERSION_NAME);
         msg("=======");
         msg("starting login sequence");
 
@@ -92,73 +88,71 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
 //            return;
 //        }
 
-        new Thread() {
-            @Override
-            public void run() {
-                // App update thread
-                String appv;
-                try {
-                    appv = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-                } catch (PackageManager.NameNotFoundException e) {
-                    throw new RuntimeException("", e);
+        if (!BuildConfig.DEBUG)
+            new Thread() {
+                @Override
+                public void run() {
+                    // App update thread
+                    String appv = BuildConfig.VERSION_NAME;
+
+                    String server_version = null;
+                    try {
+                        final HttpURLConnection connection = (HttpURLConnection) new URL("https://cab404.ru/all/bin/ph/version.txt").openConnection();
+                        connection.setInstanceFollowRedirects(false);
+                        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                        server_version = reader.readLine();
+                        reader.close();
+                    } catch (IOException e) {
+                        System.out.println("do not know newest version");
+                    }
+
+                    if (server_version != null && server_version.length() > 30)
+                        server_version = null;
+
+                    if (server_version == null) {
+                        System.out.println("okay, no data on new versions");
+                    } else if (appv.equals(server_version)) {
+                        System.out.println("our version is okay");
+                    } else {
+                        // now updating.
+                        System.out.println("okay, update");
+
+                        Meow.inMain(new Runnable() {
+                            @Override
+                            public void run() {
+                                new AlertDialog.Builder(SplashActivity.this)
+                                        .setMessage(R.string.wehavegotanupdate)
+                                        .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Intent view = new Intent(Intent.ACTION_VIEW, Uri.parse("http://cab404.ru/all/bin/ph/client.apk"));
+                                                view.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                startActivity(view);
+                                                dialog.dismiss();
+                                                finish();
+                                            }
+                                        })
+                                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                threadLoginSeq();
+                                            }
+                                        })
+                                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                            @Override
+                                            public void onCancel(DialogInterface dialog) {
+                                                threadLoginSeq();
+                                            }
+                                        }).show();
+                            }
+                        });
+                        return;
+                    }
+                    threadLoginSeq();
                 }
-
-                String server_version = null;
-                try {
-                    final HttpURLConnection connection = (HttpURLConnection) new URL("https://cab404.ru/all/bin/ph/version.txt").openConnection();
-                    connection.setInstanceFollowRedirects(false);
-                    final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    server_version = reader.readLine();
-                    reader.close();
-                } catch (IOException e) {
-                    System.out.println("do not know newest version");
-                }
-
-                if (server_version != null && server_version.length() > 30)
-                    server_version = null;
-
-                if (server_version == null) {
-                    System.out.println("okay, no data on new versions");
-                } else if (appv.equals(server_version)) {
-                    System.out.println("our version is okay");
-                } else {
-                    // now updating.
-                    System.out.println("okay, update");
-
-                    Meow.inMain(new Runnable() {
-                        @Override
-                        public void run() {
-                            new AlertDialog.Builder(SplashActivity.this)
-                                    .setMessage(R.string.wehavegotanupdate)
-                                    .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Intent view = new Intent(Intent.ACTION_VIEW, Uri.parse("http://cab404.ru/all/bin/ph/client.apk"));
-                                            view.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(view);
-                                            dialog.dismiss();
-                                            finish();
-                                        }
-                                    })
-                                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            threadLoginSeq();
-                                        }
-                                    })
-                                    .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                        @Override
-                                        public void onCancel(DialogInterface dialog) {
-                                            threadLoginSeq();
-                                        }
-                                    }).show();
-                        }
-                    });
-                    return;
-                }
-                threadLoginSeq();
-            }
-        }.start();
+            }.start();
+        else
+            threadLoginSeq();
     }
 
     private void checkLogs() {
@@ -172,7 +166,7 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
             Intent email = new Intent(Intent.ACTION_SEND);
             email.setType("text/plain");
             email.putExtra(Intent.EXTRA_SUBJECT,
-                    "phclient v" + ((App) getApplication()).appv + " crash on "
+                    "phclient v" + BuildConfig.VERSION_NAME + " crash on "
                             + Build.PRODUCT +
                             ", API " + Build.VERSION.SDK_INT);
             email.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, "ru.ponyhawks", file));

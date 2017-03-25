@@ -29,23 +29,24 @@ android {
         minSdkVersion 10
         targetSdkVersion 25
         versionCode 6
-        versionName "1.19.1"
+        versionName "1.19.2"
     }
     buildTypes {
         release {
             minifyEnabled false
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
-String support_v = '24.2.1'
+String support_v = '25.3.0'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'], exclude: ['*-sources.jar'])
 
-    compile 'com.android.support:appcompat-v7:' + support_v
-    compile 'com.android.support:support-v4:' + support_v
-    compile 'com.android.support:design:' + support_v
+    compile "com.android.support:appcompat-v7:$support_v"
+    compile "com.android.support:support-v4:$support_v"
+    compile "com.android.support:design:$support_v"
 
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile 'com.jakewharton:butterknife:7.0.1'

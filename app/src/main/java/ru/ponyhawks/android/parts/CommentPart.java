@@ -59,7 +59,6 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     Map<Integer, HtmlRipper> savedStates = new HashMap<>();
     private CommentPartCallback callback;
 
-    private int baseIndex = 2;
     public static final DisplayImageOptions AVATARS_CFG = new DisplayImageOptions.Builder().cacheInMemory(true).build();
     private int selectedId;
 
@@ -110,6 +109,9 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
 
     public Collection<Comment> getComments() {
         return data.values();
+    }
+    public Comment getComment(int id) {
+        return data.get(id);
     }
 
     public void offset(AbsListView parent, int offset) {
@@ -248,6 +250,8 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     }
 
     public int getIndex(int cid, ChumrollAdapter adapter) {
+        if (!data.containsKey(cid))
+            return MidnightSync.INDEX_REMOVE;
         return adapter.indexOf(data.get(cid));
     }
 
@@ -349,10 +353,10 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
 
         for (Comment cm : nbrs)
             if (cm.id == newC.id)
-                return -1;
+                return MidnightSync.INDEX_REMOVE;
 
         if (nbrs.size() == 0)
-            return newC.parent == 0 ? baseIndex : (adapter.indexOfId(ids.get(newC.parent)) + 1);
+            return newC.parent == 0 ? MidnightSync.INDEX_END : (adapter.indexOfId(ids.get(newC.parent)) + 1);
 
         nbrs.add(newC);
         Collections.sort(nbrs, CC_INST);

@@ -6,6 +6,10 @@
         android:title="@string/open_topics_in_separate_windows" />
     <SwitchPreference
         android:defaultValue="false"
+        android:key="backButtonHide"
+        android:title="@string/hide_topic_instead_of_closing" />
+    <SwitchPreference
+        android:defaultValue="false"
         android:key="removeShadow"
         android:title="@string/remove_actionbar_shadow" />
 </PreferenceScreen>

@@ -12,6 +12,7 @@
         app:behavior_hideable="true"
         android:layout_marginRight="72dp"
         app:behavior_peekHeight="56dp"
+        android:elevation="4dp"
         app:layout_behavior="ru.ponyhawks.android.utils.NestedSliderBehavior">
 
         <RelativeLayout

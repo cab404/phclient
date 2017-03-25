@@ -15,9 +15,15 @@
         android:id="@+id/to_the_bottom"
         android:title="@string/to_the_bottom"
         app:showAsAction="never" />
+    <!--<item-->
+        <!--android:id="@+id/continuous_refresh_settings"-->
+        <!--android:title="@string/continuous_refresh_settings"-->
+        <!--app:showAsAction="never" />-->
     <item
         android:id="@+id/continuous_refresh"
         android:title="@string/continuous_refresh"
+        android:checkable="true"
+        android:checked="false"
         app:showAsAction="never" />
     <item
         android:id="@+id/search"

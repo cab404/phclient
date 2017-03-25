@@ -16,9 +16,9 @@
     <style name="AppThemeDark" parent="Theme.AppCompat">
         <item name="android:statusBarColor" tools:targetApi="lollipop">?attr/colorPrimaryDark</item>
         <item name="inverse_bg_color">#fff</item>
-        <item name="inverse_action_bar_color">@color/abc_primary_text_material_dark</item>
-        <item name="main_foreground_color">@color/primary_material_dark</item>
-        <item name="main_background_color">@color/background_material_dark</item>
+        <item name="inverse_action_bar_color">#fff</item>
+        <item name="main_foreground_color">#212121</item>
+        <item name="main_background_color">#303030</item>
         <item name="new_background">@drawable/new_background_dark</item>
         <item name="rounded_background">@drawable/rounded_background_dark</item>
         <item name="settings_theme">@style/SettingsThemeDark</item>
@@ -29,14 +29,14 @@
     <style name="AppThemeLight" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:statusBarColor" tools:targetApi="lollipop">?attr/colorPrimaryDark</item>
         <item name="inverse_bg_color">#111</item>
-        <item name="inverse_action_bar_color">@color/abc_primary_text_material_dark</item>
-        <item name="main_foreground_color">@color/primary_material_light</item>
-        <item name="main_background_color">@color/background_material_light</item>
+        <item name="inverse_action_bar_color">#fff</item>
+        <item name="main_foreground_color">#f5f5f5</item>
+        <item name="main_background_color">#fafafa</item>
         <item name="new_background">@drawable/new_background_light</item>
         <item name="rounded_background">@drawable/rounded_background_light</item>
         <item name="settings_theme">@style/SettingsThemeLight</item>
         <item name="alert_dialog_nobg_theme">@style/Theme.AppCompat.Light.Dialog.Alert.NoBG</item>
-        <item name="best_pony">@drawable/anim_luna</item>
+        <item name="best_pony">@drawable/anim_celestia</item>
     </style>
 
     <style name="AppThemeDark.Green">
@@ -92,6 +92,14 @@
         <item name="inverse_bg_color">#744d92</item>
     </style>
 
+    <style name="AppThemeDark.Fluffle">
+        <item name="colorPrimary">#f8bbd0</item>
+        <item name="colorPrimaryDark">#f48fb1</item>
+        <item name="best_pony">@drawable/anim_fluffle</item>
+        <item name="colorAccent">#e1bee7</item>
+        <item name="inverse_bg_color">#f8bbd0</item>
+    </style>
+
     <style name="Theme.AppCompat.Dialog.Alert.NoBG">
         <item name="android:colorBackgroundCacheHint">@null</item>
 
@@ -127,6 +135,7 @@
         <item>AppThemeDark.Applejack</item>
         <item>AppThemeLight.Moondancer</item>
         <item>AppThemeDark.Moondancer</item>
+        <item>AppThemeDark.Fluffle</item>
     </string-array>
 
     <style name="SettingsThemeDark" parent="android:Theme" />

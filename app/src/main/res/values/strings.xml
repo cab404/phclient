@@ -41,9 +41,9 @@
     <string name="continuous_refresh">Autorefresh</string>
 
     <string name="interval_5_seconds">Every 5 seconds</string>
-    <string name="interval_10_seconds">Slightly more frequenly, than sometimes</string>
+    <string name="interval_10_seconds">Every 10 seconds</string>
     <string name="interval_13_seconds">Every 13 seconds</string>
-    <string name="interval_15_seconds">Sometimes</string>
+    <string name="interval_15_seconds">Every 15 seconds</string>
     <string name="interval_30_seconds">Twice a minute</string>
     <string name="interval_42_seconds">Every 42 seconds</string>
     <string name="interval_1_minute">Every minute</string>
@@ -70,6 +70,11 @@
     <string name="load_images_on_cellular">Load images on cellular</string>
     <string name="block_users">Hide threads with blocked users</string>
     <string name="blogs_label">Blogs</string>
+    <string name="hide_topic_instead_of_closing">Hide topic on back click</string>
+    <string name="show_notification_replies">Show notifications on new replies</string>
+    <string name="auto_autoupdate">Turn on autoupdate authomatically</string>
+    <string name="reply">Reply</string>
+    <string name="continuous_refresh_settings">Autorefresh period</string>
 
     <string-array name="exit">
         <item>Yes</item>
@@ -91,6 +96,7 @@
         <item>Darth Applejack</item>
         <item>Moondancer</item>
         <item>Darth Moondancer</item>
+        <item>Ze Fluffle Puff</item>
     </string-array>
 
     <string-array name="pub_pager_titles">
