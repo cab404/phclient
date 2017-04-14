@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,6 +26,8 @@ public abstract class AbstractPublicationActivity extends LoginDependentActivity
     public static final String KEY_ID = "id";
     public static final String KEY_TITLE = "title";
     private static final String TAG = "AbstractPublicationAct";
+    private static final String FRAGMENT_TAG_CONTENT = "Content";
+    private static final String FRAGMENT_TAG_COMMENTS = "Comments";
 
     AbstractCommentEditFragment ced;
     PublicationFragment topic;
@@ -50,6 +54,18 @@ public abstract class AbstractPublicationActivity extends LoginDependentActivity
 
         if (savedInstanceState != null) {
             Log.d(TAG, "onCreate: Got instance state");
+            final Fragment oldContent = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_CONTENT);
+            final Fragment oldComments = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_COMMENTS);
+
+            final FragmentTransaction transaction =
+                    getSupportFragmentManager()
+                            .beginTransaction();
+
+            if (oldComments != null) transaction.remove(oldComments);
+            if (oldContent != null) transaction.remove(oldContent);
+
+            transaction.commitAllowingStateLoss();
+
         }
 
         setTitle(getIntent().getStringExtra(KEY_TITLE));
@@ -101,10 +117,10 @@ public abstract class AbstractPublicationActivity extends LoginDependentActivity
         topic = getContentFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(
-                        R.id.content_frame, topic
+                        R.id.content_frame, topic, FRAGMENT_TAG_CONTENT
                 )
                 .add(
-                        R.id.comment_frame, ced
+                        R.id.comment_frame, ced, FRAGMENT_TAG_COMMENTS
                 )
                 .commit();
 

@@ -3,7 +3,6 @@ package ru.ponyhawks.android.fragments;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ClipboardManager;
@@ -14,7 +13,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -143,6 +141,7 @@ public abstract class PublicationFragment extends ListFragment implements
         if (commentFragment != null)
             commentFragment.setTarget(getActivity().getString(R.string.replying_topic));
 
+        isInitialized = true;
     }
 
     volatile boolean updating = false;
@@ -688,10 +687,12 @@ public abstract class PublicationFragment extends ListFragment implements
 
 
     long refreshRateMs = 0;
+    private boolean isInitialized = false;
+
     Runnable updateCycle = new Runnable() {
         @Override
         public void run() {
-            if (isDetached()) return;
+            if (isDetached() | !isInitialized) return;
             update(false);
             list.postDelayed(this, refreshRateMs);
         }

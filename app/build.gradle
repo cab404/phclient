@@ -14,6 +14,8 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+Properties local = new Properties()
+local.load(new FileReader("local.properties"))
 
 android {
     compileSdkVersion 25
@@ -29,18 +31,30 @@ android {
         minSdkVersion 10
         targetSdkVersion 25
         versionCode 6
-        versionName "1.20.0"
+        versionName "1.20.1"
     }
+
+    signingConfigs {
+        release {
+            storeFile file(local.get("key.keystore.path"))
+            storePassword local.get("key.keystore.pwd")
+            keyAlias local.get("key.alias")
+            keyPassword local.get("key.alias.pwd")
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
-            shrinkResources true
+            shrinkResources false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
-String support_v = '25.3.0'
+String support_v = '25.3.1'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'], exclude: ['*-sources.jar'])
 

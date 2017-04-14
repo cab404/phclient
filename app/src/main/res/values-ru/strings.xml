@@ -126,5 +126,6 @@
     <string name="hide_topic_instead_of_closing">Прятать топик при нажатии \"Назад\"</string>
     <string name="show_notification_replies">Показывать уведомления при новых ответах</string>
     <string name="continuous_refresh_settings">Переодичность автообновления</string>
+    <string name="reply">Ответить</string>
 
 </resources>
