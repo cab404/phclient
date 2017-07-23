@@ -19,7 +19,7 @@ local.load(new FileReader("local.properties"))
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     packagingOptions {
         exclude 'META-INF/LICENSE'
@@ -54,7 +54,7 @@ android {
 
 }
 
-String support_v = '25.3.1'
+String support_v = '25.+'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'], exclude: ['*-sources.jar'])
 

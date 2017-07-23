@@ -3,6 +3,7 @@ package ru.ponyhawks.android.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -49,7 +50,8 @@ public class MainActivity extends LoginDependentActivity implements DrawerConten
         notifArrow = new NotificationDrawerDrawable(this);
         notifArrow.setShowCircle(notifications);
         notifArrow.setColor(getTitleColor());
-        notifArrow.setCircleColor(notifArrow.getColor());
+
+
         TypedValue value = new TypedValue();
         getTheme().resolveAttribute(R.attr.inverse_action_bar_color, value, true);
         notifArrow.setColor(value.data);

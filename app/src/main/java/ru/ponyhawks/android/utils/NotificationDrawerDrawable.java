@@ -1,9 +1,12 @@
 package ru.ponyhawks.android.utils;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
+
+import ru.ponyhawks.android.R;
 
 /**
  * Created at 01:31 on 30/03/17
@@ -18,6 +21,10 @@ public class NotificationDrawerDrawable extends DrawerArrowDrawable {
         super(context);
         padding *= context.getResources().getDisplayMetrics().density;
         radius *= context.getResources().getDisplayMetrics().density;
+
+        TypedArray color = context.obtainStyledAttributes(new int[]{R.attr.notifColor});
+        setCircleColor(color.getColor(0, -1));
+        color.recycle();
     }
 
     private boolean showCircle = false;
@@ -49,7 +56,7 @@ public class NotificationDrawerDrawable extends DrawerArrowDrawable {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        paint.setColor(circleColor);
+        paint.setColor(0xff000000 | circleColor);
         if (showCircle)
             canvas.drawCircle(
                     canvas.getClipBounds().exactCenterX() + padding,

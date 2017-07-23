@@ -11,6 +11,7 @@
         <attr name="inverse_action_bar_color" format="color" />
         <attr name="alert_dialog_nobg_theme" format="reference" />
         <attr name="best_pony" format="reference" />
+        <attr name="notifColor" format="color"/>
     </declare-styleable>
 
     <style name="AppThemeDark" parent="Theme.AppCompat">
@@ -24,6 +25,7 @@
         <item name="settings_theme">@style/SettingsThemeDark</item>
         <item name="alert_dialog_nobg_theme">@style/Theme.AppCompat.Dialog.Alert.NoBG</item>
         <item name="best_pony">@drawable/anim_luna</item>
+        <item name="notifColor">#ff5252</item>
     </style>
 
     <style name="AppThemeLight" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -37,6 +39,7 @@
         <item name="settings_theme">@style/SettingsThemeLight</item>
         <item name="alert_dialog_nobg_theme">@style/Theme.AppCompat.Light.Dialog.Alert.NoBG</item>
         <item name="best_pony">@drawable/anim_celestia</item>
+        <item name="notifColor">#ff5252</item>
     </style>
 
     <style name="AppThemeDark.Green">
