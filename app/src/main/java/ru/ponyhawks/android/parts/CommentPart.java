@@ -224,8 +224,11 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
         resetOffset(view, cm);
 
         if (saveState)
-            if (savedStates.containsKey(cm.id))
-                text.setRipper(savedStates.get(cm.id));
+            if (savedStates.containsKey(cm.id)) {
+                HtmlRipper ripper = savedStates.get(cm.id);
+                text.setRipper(ripper);
+                ripper.layout();
+            }
             else
                 savedStates.put(cm.id, text.setText(cm.text));
         else

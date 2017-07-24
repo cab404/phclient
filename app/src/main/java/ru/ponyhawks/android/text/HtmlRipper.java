@@ -33,17 +33,14 @@ import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy;
+import com.bumptech.glide.request.target.Target;
 import com.cab404.moonlight.parser.HTMLTree;
 import com.cab404.moonlight.parser.Tag;
 import com.cab404.moonlight.util.SU;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.core.assist.ViewScaleType;
-import com.nostra13.universalimageloader.core.imageaware.NonViewAware;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,6 +50,7 @@ import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.text.spans.BaselineJumpSpan;
 import ru.ponyhawks.android.text.spans.DoubleClickableSpan;
 import ru.ponyhawks.android.text.spans.LitespoilerSpan;
+import ru.ponyhawks.android.utils.GlideApp;
 
 /**
  * Rips html into view list
@@ -68,7 +66,7 @@ public class HtmlRipper {
     private Context ctx;
 
     public String hostname = "ponyhawks.ru";
-    public String scheme = "http";
+    public String scheme = "https";
 
     public final int replacerImage = android.R.drawable.ic_menu_gallery;
     public final int errorImage = android.R.drawable.ic_dialog_alert;
@@ -83,6 +81,7 @@ public class HtmlRipper {
     public boolean loadVideos;
     public boolean loadImages;
     public boolean loadOnCellular;
+    public boolean displayGifs = true;
 
     public int cutBackground = R.drawable.quote_background;
     public int codeBackground = R.drawable.quote_background;
@@ -106,7 +105,6 @@ public class HtmlRipper {
         imageReplacerSize = new Rect(0, 0, (int) (30 * dp), (int) (30 * dp));
         internalMargins = (int) (8 * dp);
     }
-
 
     /**
      * Запускайте перед уничтожением этого объекта - эта штука выключает видео.
@@ -143,6 +141,7 @@ public class HtmlRipper {
 
     public void escape(final String text) {
         destroy();
+        onLayout.clear();
         onDestroy.clear();
         cached_contents.clear();
 
@@ -245,7 +244,6 @@ public class HtmlRipper {
         return link;
     }
 
-
     /**
      * Превращает HTML в понятный Android-у CharSequence и пихает его в данный ему TextView.
      */
@@ -256,7 +254,6 @@ public class HtmlRipper {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         isCellNetwork = (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE);
-
 
         boolean loadImagesFinal = this.loadImages;// && (loadOnCellular || !isCellNetwork);
         if (loadImagesFinal && isCellNetwork) loadImagesFinal = loadOnCellular;
@@ -520,40 +517,57 @@ public class HtmlRipper {
                                     Spanned.SPAN_INCLUSIVE_EXCLUSIVE
                             );
 
-                            int width, height;
-
+                            int width;
                             try {
                                 width = Integer.parseInt(tag.get("width"));
                             } catch (NumberFormatException e) {
                                 width = (int) (layout.getWidth() * 0.9f);
                             }
+                            final int fWidth = width;
 
+                            int height;
                             try {
                                 height = Integer.parseInt(tag.get("height"));
                             } catch (NumberFormatException e) {
-                                height = -1;//(int) (layout.getWidth() * 0.6f);
+                                height = Target.SIZE_ORIGINAL;//(int) (layout.getWidth() * 0.6f);
                             }
+                            final int fHeight = height;
 
-                            final SpanImageListener imageAware = new SpanImageListener(target, replacer, builder);
-                            ImageSize size = new ImageSize(width, height);
-                            DisplayImageOptions opt = new DisplayImageOptions.Builder()
-                                    .cacheInMemory(true)
-                                    .cacheOnDisk(true)
-                                    .showImageOnFail(errorImage)
-                                    .imageScaleType(ImageScaleType.EXACTLY).build();
+                            onLayout.add(new Runnable() {
+                                @Override
+                                public void run() {
 
-                            if (loadImagesFinal) {
-//                                if (ImageLoader.getInstance().getDiskCache().get(src) == null)
-//                                    ImageLoader.getInstance().loadImage(src, size, opt, imageAware);
-//                                else
-                                    ImageLoader.getInstance().displayImage(
-                                            src,
-                                            new NonViewAware(src, size, ViewScaleType.FIT_INSIDE),
-                                            opt,
-                                            imageAware
-                                    );
-                            }
 
+                                    GlideApp
+                                            .with(context)
+                                            .load(src)
+                                            .dontAnimate()
+                                            .error(errorImage)
+                                            .onlyRetrieveFromCache(!shouldUseNetwork(context))
+                                            .listener(new SpanImageListener2(target, replacer, builder))
+                                            .downsample(DownsampleStrategy.AT_MOST)
+                                            .submit(fWidth, fHeight);
+
+//                                    final SpanImageListener imageAware = new SpanImageListener(target, replacer, builder);
+//                                    ImageSize size = new ImageSize(fWidth, fHeight);
+//                                    DisplayImageOptions opt = new DisplayImageOptions.Builder()
+//                                            .cacheInMemory(true)
+//                                            .cacheOnDisk(true)
+//                                            .showImageOnFail(errorImage)
+//                                            .imageScaleType(ImageScaleType.EXACTLY).build();
+
+
+//                                    if (false) {
+//                                        ImageLoader.getInstance().displayImage(
+//                                                src,
+//                                                new NonViewAware(src, size, ViewScaleType.FIT_INSIDE),
+//                                                opt,
+//                                                imageAware
+//                                        );
+//                                    }
+
+                                }
+                            });
                             off += repl.length();
                             break;
                     }
@@ -567,6 +581,19 @@ public class HtmlRipper {
         removeRecurringChars(builder, '\n');
         deEntity(builder);
         target.setText(builder);
+    }
+
+    private boolean shouldUseNetwork(Context context) {
+        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        boolean isCellNetwork = (networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_MOBILE);
+
+        boolean doWeLoadAtAll = this.loadImages;
+
+        if (doWeLoadAtAll && isCellNetwork)
+            return loadOnCellular;
+
+        return doWeLoadAtAll;
     }
 
     private TextView form(String text, Context context) {
@@ -691,6 +718,29 @@ public class HtmlRipper {
                 Tag closing = tree.get(tree.getClosingTag(tag));
                 i = closing.index - tree.offset();
                 start_index = closing.end;
+            }
+
+            // Гифки.
+            if (displayGifs && "img".equals(tag.name) && tag.get("src").endsWith(".gif")) {
+                // Заливаем набранный чистый текст.
+                TextView pre_text = form(tree.html.subSequence(start_index, tag.start).toString(), context);
+                group.addView(pre_text);
+
+                final String src = tag.get("src");
+
+                    ImageView gif = new ImageView(context);
+
+                    GlideApp.with(gif)
+                            .load(src)
+                            .into(gif);
+
+                    group.addView(gif);
+
+                    gif.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    gif.getLayoutParams().height = (int) (context.getResources().getDisplayMetrics().widthPixels * (2f / 3));
+
+                // Закрываем и двигаем индекс.
+                start_index = tag.end;
             }
 
             // Кат

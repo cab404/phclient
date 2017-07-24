@@ -75,6 +75,7 @@
     <string name="auto_autoupdate">Turn on autoupdate authomatically</string>
     <string name="reply">Reply</string>
     <string name="continuous_refresh_settings">Autorefresh period</string>
+    <string name="display_gifs">Display GIFs</string>
 
     <string-array name="exit">
         <item>Yes</item>

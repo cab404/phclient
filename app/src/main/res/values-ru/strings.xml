@@ -107,6 +107,7 @@
     <string name="delete">Удалить</string>
     <string name="markread">Пометить как прочитанное</string>
 
+
     <string name="force_russian">Русский язык</string>
     <string name="deleted">отправлено на Луну</string>
     <string name="markedRead">отложено подальше</string>
@@ -121,6 +122,7 @@
     <string name="reload_page">Обновить страницу</string>
     <string name="load_images_on_cellular">Загружать картинки с мобильной сети</string>
     <string name="block_users">Прятать ветки с заблокированными</string>
+    <string name="display_gifs">Показывать гифки</string>
     <string name="blogs_label">Блоги</string>
     <string name="auto_autoupdate">Включать автообновление автоматически</string>
     <string name="hide_topic_instead_of_closing">Прятать топик при нажатии \"Назад\"</string>

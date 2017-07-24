@@ -36,6 +36,7 @@ public class StaticWebView extends LinearLayout {
         boundRipper.loadOnCellular = sp.getBoolean("loadOnCellular", true);
         boundRipper.loadVideos = sp.getBoolean("loadVideos", true);
         boundRipper.textIsSelectable = sp.getBoolean("textSelectable", false);
+        boundRipper.displayGifs = sp.getBoolean("displayGifs", true);
     }
 
 

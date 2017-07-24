@@ -12,10 +12,16 @@
         android:defaultValue="true"/>
     <CheckBoxPreference
         android:key="loadVideos"
-        android:title="@string/load_videos" />
+        android:title="@string/load_videos"
+        android:defaultValue="true"/>
+    <CheckBoxPreference
+        android:key="displayGifs"
+        android:title="@string/display_gifs"
+        android:defaultValue="true"/>
     <CheckBoxPreference
         android:key="textSelectable"
-        android:title="@string/select_text" />
+        android:title="@string/select_text"
+        android:defaultValue="true"/>
 
     <CheckBoxPreference
         android:key="blockUsers"
