@@ -32,9 +32,9 @@ public class StaticWebView extends LinearLayout {
 
     public void parametrize() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
-        boundRipper.loadImages = sp.getBoolean("loadImages", false);
-        boundRipper.loadOnCellular = sp.getBoolean("loadOnCellular", false);
-        boundRipper.loadVideos = sp.getBoolean("loadVideos", false);
+        boundRipper.loadImages = sp.getBoolean("loadImages", true);
+        boundRipper.loadOnCellular = sp.getBoolean("loadOnCellular", true);
+        boundRipper.loadVideos = sp.getBoolean("loadVideos", true);
         boundRipper.textIsSelectable = sp.getBoolean("textSelectable", false);
     }
 
