@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.statics.Providers;
@@ -27,7 +27,7 @@ import ru.ponyhawks.android.statics.Providers;
  */
 public class PublicationsFragment extends Fragment {
 
-    @Bind(R.id.viewPager)
+    @BindView(R.id.viewPager)
     ViewPager pager;
     private float elevation;
     protected String topicsUrl;

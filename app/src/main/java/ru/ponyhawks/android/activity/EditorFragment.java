@@ -25,7 +25,7 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
@@ -50,19 +50,19 @@ import ru.ponyhawks.android.utils.UpdateDrawable;
  */
 public class EditorFragment extends AbstractCommentEditFragment {
 
-    @Bind(R.id.instruments)
+    @BindView(R.id.instruments)
     public LinearLayout instrumentsLayout;
-    @Bind(R.id.text)
+    @BindView(R.id.text)
     public EditText text;
-    @Bind(R.id.send)
+    @BindView(R.id.send)
     public ImageView send;
 
-    @Bind(R.id.instruments_scroll)
+    @BindView(R.id.instruments_scroll)
     public View instrumentsScroll;
 
-    @Bind(R.id.editor_root)
+    @BindView(R.id.editor_root)
     public View editorRoot;
-    @Bind(R.id.editor_window)
+    @BindView(R.id.editor_window)
     public View editorWindow;
 
     float dp42;
@@ -307,7 +307,7 @@ public class EditorFragment extends AbstractCommentEditFragment {
         instruments.get(selectedInstrument).onActivityResult(requestCode, resultCode, data);
     }
 
-    @Bind(R.id.colorful_button)
+    @BindView(R.id.colorful_button)
     FloatingActionButton updateButton;
 
     @OnClick(R.id.colorful_button)

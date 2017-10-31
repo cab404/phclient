@@ -5,8 +5,8 @@ import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 
 import com.crashlytics.android.Crashlytics;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+//import com.nostra13.universalimageloader.core.ImageLoader;
+//import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.Locale;
 
@@ -32,10 +32,10 @@ public class App extends Application {
         Providers.Preferences.getInstance().init(this);
         Providers.Profile.getInstance().init(this);
 
-        final ImageLoaderConfiguration config =
-                new ImageLoaderConfiguration.Builder(this)
-                        .build();
-        ImageLoader.getInstance().init(config);
+//        final ImageLoaderConfiguration config =
+//                new ImageLoaderConfiguration.Builder(this)
+//                        .build();
+//        ImageLoader.getInstance().init(config);
 
         Providers.ImgurGateway.init(this);
 

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ponyhawks.android.R;
 
@@ -20,9 +20,9 @@ import ru.ponyhawks.android.R;
  */
 public class LineInputDialog extends Dialog {
 
-    @Bind(R.id.confirm)
+    @BindView(R.id.confirm)
     View ok;
-    @Bind(R.id.text)
+    @BindView(R.id.text)
     EditText text;
 
     private View.OnClickListener listener;

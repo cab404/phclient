@@ -8,11 +8,11 @@ import android.widget.TextView;
 import com.cab404.chumroll.ChumrollAdapter;
 import com.cab404.libph.data.CommonInfo;
 import com.cab404.libph.data.Profile;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ponyhawks.android.R;
+import ru.ponyhawks.android.utils.GlideApp;
 
 /**
  * Well, sorry for no comments here!
@@ -24,10 +24,10 @@ import ru.ponyhawks.android.R;
  */
 public class UserHeaderPart extends MoonlitPart<CommonInfo> {
 
-    @Bind(R.id.login)
+    @BindView(R.id.login)
     TextView login;
 
-    @Bind(R.id.avatar)
+    @BindView(R.id.avatar)
     ImageView avatar;
 
 
@@ -40,7 +40,8 @@ public class UserHeaderPart extends MoonlitPart<CommonInfo> {
         Profile profile = new Profile();
         profile.mid_icon = data.avatar;
         profile.fillImages();
-        ImageLoader.getInstance().displayImage(profile.big_icon, avatar, CommentPart.AVATARS_CFG);
+
+        GlideApp.with(avatar).load(profile.big_icon).into(avatar);
     }
 
     @Override

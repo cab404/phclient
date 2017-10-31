@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import ru.ponyhawks.android.R;
 
 /**
@@ -18,7 +18,7 @@ import ru.ponyhawks.android.R;
  * @author cab404
  */
 public class RefreshableListFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener {
-    @Bind(R.id.swipe_to_refresh)
+    @BindView(R.id.swipe_to_refresh)
     protected SwipeRefreshLayout swipeToRefresh;
 
     public SwipeRefreshLayout getSwipeToRefresh() {

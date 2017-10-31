@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ru.ponyhawks.android.R;
@@ -64,13 +64,13 @@ public class RefreshRatePickerDialog extends Dialog implements SeekBar.OnSeekBar
         super(context);
     }
 
-    @Bind(R.id.value)
+    @BindView(R.id.value)
     SeekBar value;
 
-    @Bind(R.id.refresh_enabled)
+    @BindView(R.id.refresh_enabled)
     CheckBox enabled;
 
-    @Bind(R.id.indicator)
+    @BindView(R.id.indicator)
     TextView indicator;
 
     @Override

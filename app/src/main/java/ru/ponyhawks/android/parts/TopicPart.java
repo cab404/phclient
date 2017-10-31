@@ -12,14 +12,13 @@ import android.widget.TextView;
 
 import com.cab404.chumroll.ChumrollAdapter;
 import com.cab404.libph.data.Topic;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.text.DateUtils;
 import ru.ponyhawks.android.text.StaticWebView;
+import ru.ponyhawks.android.utils.GlideApp;
 
 /**
  * Well, sorry for no comments here!
@@ -30,22 +29,20 @@ import ru.ponyhawks.android.text.StaticWebView;
  * @author cab404
  */
 public class TopicPart extends MoonlitPart<Topic> {
-    public static final DisplayImageOptions IMG_CFG =
-            new DisplayImageOptions.Builder().cacheInMemory(true).build();
 
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView title;
-    @Bind(R.id.text)
+    @BindView(R.id.text)
     StaticWebView text;
-    @Bind(R.id.author)
+    @BindView(R.id.author)
     TextView author;
-    @Bind(R.id.avatar)
+    @BindView(R.id.avatar)
     ImageView avatar;
-    @Bind(R.id.comment_num)
+    @BindView(R.id.comment_num)
     TextView comments;
-    @Bind(R.id.date)
+    @BindView(R.id.date)
     TextView date;
-    @Bind(R.id.delimiter)
+    @BindView(R.id.delimiter)
     View delimeter;
 
     private TopicPartCallback callback;
@@ -87,7 +84,7 @@ public class TopicPart extends MoonlitPart<Topic> {
         author.setText(data.author.login);
         avatar.setImageDrawable(null);
         if (!data.author.is_system) {
-            ImageLoader.getInstance().displayImage(data.author.small_icon, avatar, IMG_CFG);
+            GlideApp.with(avatar).load(data.author.small_icon).into(avatar);
         }
 
     }

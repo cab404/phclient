@@ -10,12 +10,12 @@ import android.widget.TextView;
 import com.cab404.chumroll.ChumrollAdapter;
 import com.cab404.libph.data.Letter;
 import com.cab404.libph.data.Topic;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.text.StaticWebView;
+import ru.ponyhawks.android.utils.GlideApp;
 
 /**
  * Well, sorry for no comments here!
@@ -27,13 +27,13 @@ import ru.ponyhawks.android.text.StaticWebView;
  */
 public class LetterPart extends MoonlitPart<Letter> {
 
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView title;
-    @Bind(R.id.text)
+    @BindView(R.id.text)
     StaticWebView text;
-    @Bind(R.id.author)
+    @BindView(R.id.author)
     TextView author;
-    @Bind(R.id.avatar)
+    @BindView(R.id.avatar)
     ImageView avatar;
     private TopicPartCallback callback;
 
@@ -56,7 +56,7 @@ public class LetterPart extends MoonlitPart<Letter> {
         data.recipients.add(0, data.starter.login);
         author.setText(TextUtils.join(", ", data.recipients));
         avatar.setImageDrawable(null);
-        ImageLoader.getInstance().displayImage(data.starter.small_icon, avatar, CommentPart.AVATARS_CFG);
+        GlideApp.with(avatar).load(data.starter.small_icon).into(avatar);
 
     }
 

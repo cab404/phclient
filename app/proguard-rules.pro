@@ -15,9 +15,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--keep class butterknife.** { *; }
--dontwarn butterknife.internal.**
--keep class **$$ViewInjector { *; }
+
+-keep class **$$ViewBinder { *; }
+-dontwarn butterknife.**
+
+
 -keep class org.apache.log4j.**
 -keepclassmembers class org.apache.http.HttpConnection
 -keepclassmembers class org.apache.http.HttpInetConnection
@@ -25,13 +27,5 @@
 
 -dontwarn org.apache.commons.logging.**
 -dontwarn com.android.internal.http.multipart.MultipartEntity
-
--keepclasseswithmembernames class * {
-    @butterknife.* <fields>;
-}
-
--keepclasseswithmembernames class * {
-    @butterknife.* <methods>;
-}
 
 -keepattributes *Annotation*,EnclosingMethod,Signature

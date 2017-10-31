@@ -20,8 +20,6 @@ import com.cab404.libph.data.Comment;
 import com.cab404.libph.modules.CommentTreeModule;
 import com.cab404.moonlight.parser.HTMLTree;
 import com.cab404.moonlight.parser.Tag;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,13 +29,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.text.DateUtils;
 import ru.ponyhawks.android.text.HtmlRipper;
 import ru.ponyhawks.android.text.StaticWebView;
 import ru.ponyhawks.android.utils.DoubleClickListener;
+import ru.ponyhawks.android.utils.GlideApp;
 import ru.ponyhawks.android.utils.MidnightSync;
 
 /**
@@ -59,7 +58,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     Map<Integer, HtmlRipper> savedStates = new HashMap<>();
     private CommentPartCallback callback;
 
-    public static final DisplayImageOptions AVATARS_CFG = new DisplayImageOptions.Builder().cacheInMemory(true).build();
+//    public static final DisplayImageOptions AVATARS_CFG = new DisplayImageOptions.Builder().cacheInMemory(true).build();
     private int selectedId;
 
     public synchronized void register(Comment comment) {
@@ -156,21 +155,21 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
             }
     }
 
-    @Bind(R.id.text)
+    @BindView(R.id.text)
     StaticWebView text;
-    @Bind(R.id.author)
+    @BindView(R.id.author)
     TextView author;
-    @Bind(R.id.date)
+    @BindView(R.id.date)
     TextView date;
-    @Bind(R.id.avatar)
+    @BindView(R.id.avatar)
     ImageView avatar;
-    @Bind(R.id.repost)
+    @BindView(R.id.repost)
     ImageView repost;
-    @Bind(R.id.userspace)
+    @BindView(R.id.userspace)
     View userspace;
-    @Bind(R.id.delimiter)
+    @BindView(R.id.delimiter)
     View delimeter;
-    @Bind(R.id.root)
+    @BindView(R.id.root)
     View root;
 
     @Override
@@ -244,7 +243,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
         root.setBackgroundColor(cm.deleted ? 0x40000000 : 0);
 
         if (!cm.author.is_system) {
-            ImageLoader.getInstance().displayImage(cm.author.small_icon, avatar, AVATARS_CFG);
+            GlideApp.with(avatar).load(cm.author.small_icon).into(avatar);
         }
     }
 

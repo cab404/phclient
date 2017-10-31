@@ -1,5 +1,8 @@
 package ru.ponyhawks.android.activity;
 
+import android.os.Bundle;
+import android.os.PersistableBundle;
+
 /**
  * Well, sorry for no comments here!
  * Still you can send me your question to me@cab404.ru!
@@ -9,6 +12,10 @@ package ru.ponyhawks.android.activity;
  * @author cab404
  */
 public class ProfileActivity extends LoginDependentActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        String username = getIntent().getData().getQueryParameter("username");
 
-
+    }
 }
