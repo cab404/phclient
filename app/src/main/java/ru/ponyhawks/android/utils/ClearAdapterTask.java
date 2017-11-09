@@ -12,11 +12,11 @@ import com.cab404.moonlight.framework.ModularBlockParser;
  * @author cab404
  */
 public class ClearAdapterTask implements ModularBlockParser.ParsedObjectHandler, Runnable {
-    private final UniteSyncronization sync;
+    private final UniteSynchronization sync;
     private final ChumrollAdapter adapter;
     boolean cleared = false;
 
-    public ClearAdapterTask(ChumrollAdapter adapter, UniteSyncronization sync) {
+    public ClearAdapterTask(ChumrollAdapter adapter, UniteSynchronization sync) {
         this.adapter = adapter;
         this.sync = sync;
     }

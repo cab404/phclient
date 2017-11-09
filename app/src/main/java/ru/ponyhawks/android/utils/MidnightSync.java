@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author cab404
  */
-public class MidnightSync extends UniteSyncronization implements ModularBlockParser.ParsedObjectHandler {
+public class MidnightSync extends UniteSynchronization implements ModularBlockParser.ParsedObjectHandler {
 
     /**
      * Drops th item

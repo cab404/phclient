@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author cab404
  */
-public class UniteSyncronization {
+public class UniteSynchronization {
     private final BatchRunnable runnable = new BatchRunnable();
 
     public void post(Runnable psto) {
