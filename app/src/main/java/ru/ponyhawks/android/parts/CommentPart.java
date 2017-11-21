@@ -63,6 +63,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
 
     public synchronized void register(Comment comment) {
 
+        /* мост */
         if ("ph".equals(comment.author.login)) {
             try {
                 HTMLTree html = new HTMLTree(comment.text);

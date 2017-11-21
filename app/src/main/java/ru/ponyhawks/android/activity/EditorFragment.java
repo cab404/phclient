@@ -73,7 +73,7 @@ public class EditorFragment extends AbstractCommentEditFragment {
 
     {
         instruments = new ArrayList<>();
-        instruments.add(SimpleChangers.RE);
+//        instruments.add(SimpleChangers.RE);
         instruments.add(SimpleChangers.SPOILER);
         instruments.add(SimpleChangers.LINK);
         instruments.add(SimpleChangers.QUOTE);
