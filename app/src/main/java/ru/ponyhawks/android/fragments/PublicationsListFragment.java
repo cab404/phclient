@@ -1,9 +1,13 @@
 package ru.ponyhawks.android.fragments;
 
 import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,10 +16,13 @@ import android.widget.Toast;
 
 import com.cab404.chumroll.ChumrollAdapter;
 import com.cab404.libph.data.Topic;
+import com.cab404.libph.data.Type;
 import com.cab404.libph.modules.CommentModule;
 import com.cab404.libph.modules.TopicModule;
 import com.cab404.libph.pages.BasePage;
 import com.cab404.libph.pages.MainPage;
+import com.cab404.libph.requests.FavRequest;
+import com.cab404.libph.requests.SubmitPollRequest;
 import com.cab404.moonlight.framework.ModularBlockParser;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -92,6 +99,56 @@ public class PublicationsListFragment extends RefreshableListFragment {
             @Override
             public void onClick(Topic data, View view) {
                 switchToPage(data);
+            }
+        });
+        topicPart.setCallback(new TopicPart.TopicPartCallback() {
+            @Override
+            public void onFavInvoked(final Topic cm, final Context context) {
+                RequestManager.fromActivity(getActivity())
+                        .manage(new FavRequest(Type.TOPIC, cm.id, !cm.in_favourites))
+                        .setCallback(new RequestManager.SimpleRequestCallback<FavRequest>() {
+                            @Override
+                            public void onSuccess(final FavRequest what) {
+                                super.onSuccess(what);
+                                cm.in_favourites = !cm.in_favourites;
+                                Meow.inMain(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, what.msg, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+                        }).start();
+            }
+
+            @Override
+            public void onShareInvoked(Topic cm, Context context) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, "dummy-");
+                intent.setType("text/plain");
+                startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_topic)));
+            }
+
+            @Override
+            public void onPollSubmitInvoked(final Topic cm, int answer) {
+                System.out.println(answer);
+                RequestManager.fromActivity(getActivity())
+                        .manage(new SubmitPollRequest(cm.id, answer))
+                        .setCallback(new RequestManager.SimpleRequestCallback<SubmitPollRequest>() {
+                            @Override
+                            public void onSuccess(final SubmitPollRequest what) {
+                                super.onSuccess(what);
+                                cm.is_pollFinished = true;
+                                cm.pollData = what.results;
+                                Meow.inMain(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getActivity(), what.msg, Toast.LENGTH_SHORT).show();
+                                        adapter.update(adapter.indexOf(cm), cm);
+                                    }
+                                });
+                            }
+                        }).start();
             }
         });
 

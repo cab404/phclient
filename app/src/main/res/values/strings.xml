@@ -76,6 +76,8 @@
     <string name="reply">Reply</string>
     <string name="continuous_refresh_settings">Autorefresh period</string>
     <string name="display_gifs">Display GIFs</string>
+    <string name="share_comment">Share comment link</string>
+    <string name="share_topic">Share topic link</string>
 
     <string-array name="exit">
         <item>Yes</item>

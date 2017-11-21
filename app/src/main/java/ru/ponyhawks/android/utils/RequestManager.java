@@ -92,6 +92,7 @@ public class RequestManager {
 
         @Override
         public void onError(Cls what, Exception e) {
+            e.printStackTrace();
         }
 
         @Override

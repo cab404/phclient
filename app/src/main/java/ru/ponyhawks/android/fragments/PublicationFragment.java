@@ -660,8 +660,10 @@ public abstract class PublicationFragment extends ListFragment implements
 
     public void share(Comment cm, Context context) {
         final String clip = getLink(cm);
-        setClipboard(clip);
-        Toast.makeText(getActivity(), R.string.comment_link_copied, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, clip);
+        intent.setType("text/plain");
+        startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_comment)));
     }
 
     protected abstract String getLink(Comment cm);

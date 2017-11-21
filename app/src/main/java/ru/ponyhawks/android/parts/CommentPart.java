@@ -58,7 +58,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     Map<Integer, HtmlRipper> savedStates = new HashMap<>();
     private CommentPartCallback callback;
 
-//    public static final DisplayImageOptions AVATARS_CFG = new DisplayImageOptions.Builder().cacheInMemory(true).build();
+    //    public static final DisplayImageOptions AVATARS_CFG = new DisplayImageOptions.Builder().cacheInMemory(true).build();
     private int selectedId;
 
     public synchronized void register(Comment comment) {
@@ -92,8 +92,9 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     }
 
     private int levelOf(int id, int cl) {
-        if (!data.containsKey(id)) return 0;
-        int parent = data.get(id).parent;
+        Comment comment = data.get(id);
+        if (comment == null) return 0;
+        int parent = comment.parent;
         if (parent != 0)
             return levelOf(parent, cl + 1);
         else
@@ -109,6 +110,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     public Collection<Comment> getComments() {
         return data.values();
     }
+
     public Comment getComment(int id) {
         return data.get(id);
     }
@@ -227,8 +229,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
                 HtmlRipper ripper = savedStates.get(cm.id);
                 text.setRipper(ripper);
                 ripper.layout();
-            }
-            else
+            } else
                 savedStates.put(cm.id, text.setText(cm.text));
         else
             text.setText(cm.text);
@@ -377,8 +378,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
                 .obtainStyledAttributes(new int[]{R.attr.alert_dialog_nobg_theme})
                 .getResourceId(0, 0);
 
-        @SuppressLint("InflateParams") final
-        View controls = LayoutInflater.from(ctx)
+        @SuppressLint("InflateParams") final View controls = LayoutInflater.from(ctx)
                 .inflate(R.layout.alert_comment_controls, null, false);
 
         final AlertDialog dialog = new AlertDialog

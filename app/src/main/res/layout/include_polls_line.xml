@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/vAdd"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingRight="4dp"
+        android:layout_alignTop="@id/_vTitleCompound"
+        android:src="@drawable/ic_add" />
+
+    <ProgressBar
+        android:id="@+id/vVotes"
+        style="?android:progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/vAdd"
+        android:max="10000"
+        android:progress="10"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/_vTitleCompound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vVotes"
+        android:layout_centerInParent="true"
+        android:layout_toRightOf="@id/vAdd"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/vTitle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Келимборна в одмины" />
+
+        <TextView
+            android:id="@+id/vCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?colorAccent"
+            android:text=""/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
