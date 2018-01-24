@@ -11,7 +11,10 @@ import com.cab404.libph.util.PonyhawksProfile;
 import org.apache.http.HttpResponse;
 import org.apache.http.RequestLine;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URIUtils;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Observable;
 
 import ru.ponyhawks.android.utils.Imgur;
@@ -82,7 +85,10 @@ public class Providers {
                 @Override
                 public HttpResponse exec(HttpRequestBase request, boolean follow, int timeout) {
                     final RequestLine rl = request.getRequestLine();
+                    if (rl.getUri().startsWith("//"))
+                        request.setURI(URI.create("https:" + rl.getUri()));
                     Log.d("Moonlight", rl.getMethod() + " " + rl.getUri());
+
                     return super.exec(request, follow, timeout);
                 }
             };

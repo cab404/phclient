@@ -18,8 +18,8 @@ Properties local = new Properties()
 local.load(new FileReader("local.properties"))
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 
     packagingOptions {
         exclude 'META-INF/LICENSE'
@@ -30,9 +30,9 @@ android {
         applicationId "ru.ponyhawks.android"
         //noinspection MinSdkTooLow
         minSdkVersion 14
-        targetSdkVersion 26
-        versionCode 7
-        versionName "1.21.1"
+        targetSdkVersion 27
+        versionCode 8
+        versionName "1.22"
     }
 
     signingConfigs {
@@ -56,7 +56,7 @@ android {
 
 }
 
-String support_v = '26.+'
+String support_v = '27.+'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'], exclude: ['*-sources.jar'])
 
