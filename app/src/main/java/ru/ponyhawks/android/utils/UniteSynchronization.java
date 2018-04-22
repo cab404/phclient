@@ -9,6 +9,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Manages task batching
+ * Lowers fps drops when posting a lot of tasks into main thread by posting limited count at a time and scheduling the rest l8r.
+ * <p>
  * <p/>
  * Created at 23:07 on 21/09/15
  *

@@ -15,10 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import ru.ponyhawks.android.activity.BaseActivity;
 
 /**
- * Well, sorry for no comments here!
- * Still you can send me your question to me@cab404.ru!
- * <p/>
- * Created at 12:25 on 22/09/15
+ * Thing to manage requests to Moonlight. Helps with livecycles and stuff.
  *
  * @author cab404
  */

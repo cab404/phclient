@@ -11,10 +11,7 @@ import butterknife.ButterKnife;
 import ru.ponyhawks.android.R;
 
 /**
- * Well, sorry for no comments here!
- * Still you can send me your question to me@cab404.ru!
- * <p/>
- * Created at 13:50 on 08/01/17
+ * Simple dialog for entering a line of text.
  *
  * @author cab404
  */

@@ -18,10 +18,7 @@ import android.view.View;
 import ru.ponyhawks.android.R;
 
 /**
- * Well, sorry for no comments here!
- * Still you can send me your question to me@cab404.ru!
- * <p/>
- * Created at 21:47 on 27/09/15
+ * This is a spinning circle with an arrow.
  *
  * @author cab404
  */

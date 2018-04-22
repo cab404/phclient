@@ -9,7 +9,7 @@ import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import ru.ponyhawks.android.R;
 
 /**
- * Created at 01:31 on 30/03/17
+ * Adds a red circle if you need to show that user's got some notifications.
  *
  * @author cab404
  */

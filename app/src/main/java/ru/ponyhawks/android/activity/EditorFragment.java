@@ -125,7 +125,6 @@ public class EditorFragment extends AbstractCommentEditFragment {
         @Override
         public void onSlide(@NonNull View bottomSheet, float slideOffset) {
             if (getView() == null) return;
-            System.out.println(slideOffset);
             changeLayout(slideOffset > 0 ? slideOffset : 0);
         }
     };

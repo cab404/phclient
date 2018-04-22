@@ -31,10 +31,7 @@ import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.statics.Providers;
 
 /**
- * Well, sorry for no comments here!
- * Still you can send me your question to me@cab404.ru!
- * <p/>
- * Created at 22:40 on 29/04/15
+ * Prompts user with nice dialog to choose what image to upload.
  *
  * @author cab404
  */
@@ -42,11 +39,7 @@ public class ImageChooser {
 
     ImageUrlHandler handler;
 
-    private String[] ITEMS = new String[]{
-            "Сфотографировать",
-            "Выбрать из галереи",
-            "Ввести ссылку",
-    };
+    private String[] ITEMS;
 
     private static final int
             TAKE_PHOTO = 0,
@@ -64,7 +57,7 @@ public class ImageChooser {
         ITEMS = ctx.getResources().getStringArray(R.array.image_chooser_entries);
     }
 
-    File subtarget;
+    private File subtarget;
 
     /**
      * Will finish given activity on cancel, if urgent.

@@ -10,6 +10,7 @@ import android.support.annotation.DrawableRes;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
+import android.util.Log;
 import android.widget.EditText;
 
 import java.net.MalformedURLException;
@@ -50,6 +51,7 @@ public abstract class RequestTextChanger implements TextChanger {
                 .replace("$", text.subSequence(ss, se));
 
         text.replace(ss, se, ready);
+        Log.v("selection", "1");
 
         // Updating, just to be sure that editable won't go OOB on selection
         ed.setText(text);

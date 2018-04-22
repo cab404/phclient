@@ -3,8 +3,7 @@ package ru.ponyhawks.android.utils;
 import android.view.View;
 
 /**
- * Sorry for no comments!
- * Created at 6:14 on 05.02.15
+ * Listens for a double click, and then triggers supplied callback
  *
  * @author cab404
  */

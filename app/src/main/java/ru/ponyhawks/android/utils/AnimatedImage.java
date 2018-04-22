@@ -14,10 +14,7 @@ import android.view.View;
 import ru.ponyhawks.android.R;
 
 /**
- * Well, sorry for no comments here!
- * Still you can send me your question to me@cab404.ru!
- * <p/>
- * Created at 18:21 on 05/12/15
+ * Simple view that shows supplied animatedDrawable better, than if it was in ImageView.
  *
  * @author cab404
  */
