@@ -312,7 +312,7 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
                 startActivity(returnTo);
                 finish();
             }
-        }, 1500);
+        }, 100);
     }
 
 
