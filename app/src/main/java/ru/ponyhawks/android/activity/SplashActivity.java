@@ -96,15 +96,15 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
                     String appv = BuildConfig.VERSION_NAME;
 
                     String server_version = null;
-                    try {
-                        final HttpURLConnection connection = (HttpURLConnection) new URL("https://cab404.ru/all/bin/ph/version.txt").openConnection();
-                        connection.setInstanceFollowRedirects(false);
-                        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        server_version = reader.readLine();
-                        reader.close();
-                    } catch (IOException e) {
-                        System.out.println("do not know newest version");
-                    }
+//                    try {
+//                        final HttpURLConnection connection = (HttpURLConnection) new URL("https://cab404.ru/all/bin/ph/version.txt").openConnection();
+//                        connection.setInstanceFollowRedirects(false);
+//                        final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+//                        server_version = reader.readLine();
+//                        reader.close();
+//                    } catch (IOException e) {
+//                        System.out.println("do not know newest version");
+//                    }
 
                     if (server_version != null && server_version.length() > 30)
                         server_version = null;
