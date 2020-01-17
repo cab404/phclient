@@ -1,3 +1,6 @@
+import com.android.build.gradle.internal.dsl.BuildType as AndroidBuildType
+import com.android.builder.internal.ClassFieldImpl
+
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -16,6 +19,13 @@ repositories {
 
 Properties local = new Properties()
 local.load(new FileReader("local.properties"))
+
+static void bc(AndroidBuildType self, String name, String value) {
+    (self as AndroidBuildType).buildConfigFields[name] = new ClassFieldImpl("String", name, "\"$value\"")
+}
+static void bc(AndroidBuildType self, String name, Boolean value) {
+    (self as AndroidBuildType).buildConfigFields[name] = new ClassFieldImpl("Boolean", name, value.toString())
+}
 
 android {
     compileSdkVersion 27
@@ -45,7 +55,18 @@ android {
     }
 
     buildTypes {
+        defaultConf {
+            bc delegate, "IMGUR_CLIENT_ID", local.get("imgur.client_id")
+        }
+
+        debug {
+            initWith defaultConf
+            signingConfig signingConfigs.release
+        }
+
         release {
+            initWith defaultConf
+
             minifyEnabled true
             shrinkResources true
             useProguard false

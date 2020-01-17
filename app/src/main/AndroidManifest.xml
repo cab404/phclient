@@ -89,11 +89,6 @@
 
         </activity>
 
-        <meta-data
-            android:name="imgur-api-key"
-            android:value="a2729ecb14b91ba" />
-
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="ru.ponyhawks"

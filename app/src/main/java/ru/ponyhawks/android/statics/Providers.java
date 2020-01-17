@@ -17,6 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Observable;
 
+import ru.ponyhawks.android.BuildConfig;
 import ru.ponyhawks.android.utils.Imgur;
 
 /**
@@ -40,15 +41,7 @@ public class Providers {
         private static Imgur.Gateway gateway;
 
         static void init(Context context) {
-            try {
-                String token = context
-                        .getPackageManager()
-                        .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA)
-                        .metaData.getString("imgur-api-key");
-                gateway = new Imgur.Gateway(token);
-            } catch (PackageManager.NameNotFoundException e) {
-                throw new RuntimeException("", e);
-            }
+            gateway = new Imgur.Gateway(BuildConfig.IMGUR_CLIENT_ID);
         }
 
         public static Imgur.Gateway get() {
