@@ -11,12 +11,13 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
+import java.util.Arrays;
 
 /**
  * Simple imgur uploader
@@ -64,16 +65,34 @@ public final class Imgur {
             this.length = (int) file.length();
         }
 
+        byte[] readStream(InputStream stream) throws IOException {
+            int blockSize = 1024 * 1024;
+            int read_count = 0;
+            byte[] block = new byte[blockSize];
+
+            while ((read_count += stream.read(block, read_count, block.length - read_count)) >= 0)
+                if (read_count == block.length)
+                    block = Arrays.copyOf(block, block.length + blockSize);
+
+            return block;
+        }
+
+
         @Override
         protected HttpRequestBase getRequest(AccessProfile accessProfile) {
             HttpPost post = new HttpPost("/3/image");
             BasicHttpEntity entity = new BasicHttpEntity();
-            entity.setContent(stream);
-            if (length > 0)
-                entity.setContentLength(length);
-            entity.setChunked(length <= 0);
-            entity.setContentType("image/*");
+            byte[] bytes;
+            try {
+                bytes = readStream(stream);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            entity.setContent(new ByteArrayInputStream(bytes));
+            entity.setContentLength(bytes.length);
             post.setEntity(entity);
+
             return post;
         }
 
