@@ -41,8 +41,8 @@ android {
         //noinspection MinSdkTooLow
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 11
-        versionName "1.22.3"
+        versionCode 12
+        versionName "1.22.4"
     }
 
     signingConfigs {
