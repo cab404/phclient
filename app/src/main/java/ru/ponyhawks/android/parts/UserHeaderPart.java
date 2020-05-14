@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.utils.GlideApp;
+import ru.ponyhawks.android.utils.Meow;
 
 /**
  * Well, sorry for no comments here!
@@ -41,7 +42,7 @@ public class UserHeaderPart extends MoonlitPart<CommonInfo> {
         profile.mid_icon = data.avatar;
         profile.fillImages();
 
-        GlideApp.with(avatar).load(profile.big_icon).into(avatar);
+        GlideApp.with(avatar).load(Meow.getUrl(profile.big_icon)).into(avatar);
     }
 
     @Override

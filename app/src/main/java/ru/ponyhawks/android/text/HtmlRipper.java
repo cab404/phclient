@@ -51,6 +51,7 @@ import ru.ponyhawks.android.text.spans.BaselineJumpSpan;
 import ru.ponyhawks.android.text.spans.DoubleClickableSpan;
 import ru.ponyhawks.android.text.spans.LitespoilerSpan;
 import ru.ponyhawks.android.utils.GlideApp;
+import ru.ponyhawks.android.utils.Meow;
 
 /**
  * Rips html into view list
@@ -731,7 +732,7 @@ public class HtmlRipper {
                     ImageView gif = new ImageView(context);
 
                     GlideApp.with(gif)
-                            .load(src)
+                            .load(Meow.getUrl(src))
                             .into(gif);
 
                     group.addView(gif);

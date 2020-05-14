@@ -194,4 +194,10 @@ public class Meow {
 
     }
 
+    public static String getUrl(String urlStr) {
+        if (!urlStr.startsWith("http"))
+            urlStr = "https:" + urlStr;
+        return urlStr;
+    }
+
 }
