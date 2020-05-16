@@ -66,14 +66,23 @@
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Текст" />
+            android:text="Текст" >
+
+        </ru.ponyhawks.android.text.StaticWebView>
 
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <ru.ponyhawks.android.text.StaticWebView
+            android:id="@+id/info_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
             android:id="@+id/vPollsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" />
+            android:orientation="vertical" >
+
+        </LinearLayout>
 
     </LinearLayout>
 

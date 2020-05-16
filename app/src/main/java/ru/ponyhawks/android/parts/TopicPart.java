@@ -42,6 +42,8 @@ public class TopicPart extends MoonlitPart<Topic> {
     TextView title;
     @BindView(R.id.text)
     StaticWebView text;
+    @BindView(R.id.info_block)
+    StaticWebView info_block;
     @BindView(R.id.author)
     TextView author;
     @BindView(R.id.avatar)
@@ -61,6 +63,7 @@ public class TopicPart extends MoonlitPart<Topic> {
         ButterKnife.bind(this, view);
         title.setText(data.title);
         text.setText(data.text);
+        info_block.setText(data.info_block);
 
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
