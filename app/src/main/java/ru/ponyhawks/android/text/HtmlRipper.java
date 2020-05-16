@@ -791,7 +791,7 @@ public class HtmlRipper {
                 code.setBackgroundResource(codeBackground);
                 code.setPadding(internalMargins, internalMargins, internalMargins, internalMargins);
                 code.setTypeface(Typeface.MONOSPACE);
-                code.setTextSize(code.getTextSize() * 0.8f);
+                //code.setTextSize(code.getTextSize() * 0.8f);
                 code.setTextColor(codeColor);
 
                 group.addView(code);
