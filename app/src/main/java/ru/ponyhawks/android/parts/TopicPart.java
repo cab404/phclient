@@ -26,6 +26,7 @@ import ru.ponyhawks.android.statics.Providers;
 import ru.ponyhawks.android.text.DateUtils;
 import ru.ponyhawks.android.text.StaticWebView;
 import ru.ponyhawks.android.utils.GlideApp;
+import ru.ponyhawks.android.utils.Meow;
 
 /**
  * Well, sorry for no comments here!
@@ -41,6 +42,8 @@ public class TopicPart extends MoonlitPart<Topic> {
     TextView title;
     @BindView(R.id.text)
     StaticWebView text;
+    @BindView(R.id.info_block)
+    StaticWebView info_block;
     @BindView(R.id.author)
     TextView author;
     @BindView(R.id.avatar)
@@ -60,6 +63,7 @@ public class TopicPart extends MoonlitPart<Topic> {
         ButterKnife.bind(this, view);
         title.setText(data.title);
         text.setText(data.text);
+        info_block.setText(data.info_block);
 
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -91,7 +95,7 @@ public class TopicPart extends MoonlitPart<Topic> {
         author.setText(data.author.login);
         avatar.setImageDrawable(null);
         if (!data.author.is_system) {
-            GlideApp.with(avatar).load(data.author.small_icon).into(avatar);
+            GlideApp.with(avatar).load(Meow.getUrl(data.author.small_icon)).into(avatar);
         }
 
         /* polls */

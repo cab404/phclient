@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import ru.ponyhawks.android.R;
 import ru.ponyhawks.android.text.StaticWebView;
 import ru.ponyhawks.android.utils.GlideApp;
+import ru.ponyhawks.android.utils.Meow;
 
 /**
  * Well, sorry for no comments here!
@@ -56,7 +57,7 @@ public class LetterPart extends MoonlitPart<Letter> {
         data.recipients.add(0, data.starter.login);
         author.setText(TextUtils.join(", ", data.recipients));
         avatar.setImageDrawable(null);
-        GlideApp.with(avatar).load(data.starter.small_icon).into(avatar);
+        GlideApp.with(avatar).load(Meow.getUrl(data.starter.small_icon)).into(avatar);
 
     }
 

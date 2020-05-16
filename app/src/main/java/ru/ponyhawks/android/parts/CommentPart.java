@@ -37,6 +37,7 @@ import ru.ponyhawks.android.text.HtmlRipper;
 import ru.ponyhawks.android.text.StaticWebView;
 import ru.ponyhawks.android.utils.DoubleClickListener;
 import ru.ponyhawks.android.utils.GlideApp;
+import ru.ponyhawks.android.utils.Meow;
 import ru.ponyhawks.android.utils.MidnightSync;
 
 /**
@@ -64,7 +65,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
     public synchronized void register(Comment comment) {
 
         /* мост */
-        if ("ph".equals(comment.author.login)) {
+        if ("Tumble".equals(comment.author.login)) {
             try {
                 HTMLTree html = new HTMLTree(comment.text);
                 List<Tag> tags = html.xPath("a&target=_blank");
@@ -245,7 +246,7 @@ public class CommentPart extends MoonlitPart<Comment> implements MidnightSync.In
         root.setBackgroundColor(cm.deleted ? 0x40000000 : 0);
 
         if (!cm.author.is_system) {
-            GlideApp.with(avatar).load(cm.author.small_icon).into(avatar);
+            GlideApp.with(avatar).load(Meow.getUrl(cm.author.small_icon)).into(avatar);
         }
     }
 
