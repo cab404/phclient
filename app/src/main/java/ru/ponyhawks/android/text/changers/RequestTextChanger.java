@@ -60,7 +60,7 @@ public abstract class RequestTextChanger implements TextChanger {
             if (ss != se)
                 ed.setSelection(seli + ss, seli + ss + ready.length());
             else
-                ed.setSelection(seli + ss);
+                ed.setSelection(seli + ready.length());
         else
             if (ss != se)
                 ed.setSelection(seli + insi, seli + insi + se - ss);
