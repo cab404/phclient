@@ -2,6 +2,7 @@ package ru.ponyhawks.android.text;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -12,6 +13,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
@@ -36,7 +38,10 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.cab404.moonlight.parser.HTMLTree;
 import com.cab404.moonlight.parser.Tag;
@@ -47,6 +52,8 @@ import java.util.Collection;
 import java.util.List;
 
 import ru.ponyhawks.android.R;
+import ru.ponyhawks.android.fragments.LoginFragment;
+import ru.ponyhawks.android.statics.Providers;
 import ru.ponyhawks.android.text.spans.BaselineJumpSpan;
 import ru.ponyhawks.android.text.spans.DoubleClickableSpan;
 import ru.ponyhawks.android.text.spans.LitespoilerSpan;
@@ -66,9 +73,6 @@ public class HtmlRipper {
     private List<View> cached_contents;
     private Context ctx;
 
-    public String hostname = "ponyhawks.ru";
-    public String scheme = "https";
-
     public final int replacerImage = android.R.drawable.ic_menu_gallery;
     public final int errorImage = android.R.drawable.ic_dialog_alert;
 
@@ -83,6 +87,7 @@ public class HtmlRipper {
     public boolean loadImages;
     public boolean loadOnCellular;
     public boolean displayGifs = true;
+    public boolean supportSmilepack = true;
 
     public int cutBackground = R.drawable.quote_background;
     public int codeBackground = R.drawable.quote_background;
@@ -235,16 +240,6 @@ public class HtmlRipper {
     /* ... */
     private final static String header_end = "</header>\r\n\n\t\n\t\t\t";
 
-    private String fixUrl(String link) {
-        if (!link.isEmpty()) {
-            if (link.startsWith("//"))
-                link = scheme + ":" + link;
-            if (link.startsWith("/"))
-                link = scheme + "://" + hostname + link;
-        }
-        return link;
-    }
-
     /**
      * Превращает HTML в понятный Android-у CharSequence и пихает его в данный ему TextView.
      */
@@ -351,7 +346,7 @@ public class HtmlRipper {
                             );
                             break;
                         case "a":
-                            String link = fixUrl(tag.get("href"));
+                            String link = Meow.getUrl(tag.get("href"));
 
                             if (link.isEmpty())
                                 continue;
@@ -471,6 +466,54 @@ public class HtmlRipper {
                             builder.insert(off++ + tag.start, "\n");
                             builder.insert(off++ + tree.get(tree.getClosingTag(tag)).start, "\n");
                             break;
+                        case "smile":
+                            if(!supportSmilepack) continue;
+                            if (tag.get("id").isEmpty()) continue;
+                            final String repl = "I";
+                            builder.insert(off + tag.start, repl);
+
+                            final String src = Meow.getUrl(Providers.SmilepackUtils.getLink(tag.get("id")));
+
+                            Drawable dr = context.getResources().getDrawable(replacerImage);
+                            if (dr != null)
+                                dr.setBounds(imageReplacerSize);
+
+                            final ImageSpan replacer = new ImageSpan(dr);
+
+                            builder.setSpan(
+                                    replacer,
+                                    off + tag.start,
+                                    off + tag.start + repl.length(),
+                                    Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+                            );
+                            builder.setSpan(
+                                    new DoubleClickableSpan() {
+                                        @Override
+                                        public void onDoubleClick(View widget) {
+                                            ctx.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(src)));
+                                        }
+                                    },
+                                    off + tag.start,
+                                    off + tag.start + repl.length(),
+                                    Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+                            );
+
+                            onLayout.add(new Runnable() {
+                                @Override
+                                public void run() {
+                                    GlideApp
+                                            .with(context)
+                                            .load(src)
+                                            .dontAnimate()
+                                            .error(errorImage)
+                                            .onlyRetrieveFromCache(!shouldUseNetwork(context))
+                                            .listener(new SpanImageListener2(target, replacer, builder))
+                                            .downsample(DownsampleStrategy.AT_MOST)
+                                            .submit();
+                                }
+                            });
+                            off += repl.length();
+                            break;
                     }
                 else if (tag.isStandalone())
                     switch (tag.name) {
@@ -492,7 +535,7 @@ public class HtmlRipper {
                             final String repl = "I";
                             builder.insert(off + tag.start, repl);
 
-                            final String src = fixUrl(tag.get("src"));
+                            final String src = Meow.getUrl(tag.get("src"));
 
                             Drawable dr = context.getResources().getDrawable(replacerImage);
                             if (dr != null)
@@ -523,6 +566,9 @@ public class HtmlRipper {
                                 width = Integer.parseInt(tag.get("width"));
                             } catch (NumberFormatException e) {
                                 width = (int) (layout.getWidth() * 0.9f);
+                            }
+                            if (width == 0){
+                                width = Target.SIZE_ORIGINAL;
                             }
                             final int fWidth = width;
 
@@ -627,6 +673,10 @@ public class HtmlRipper {
     private void escape(String text, final ViewGroup group) {
         final Context context = group.getContext();
         group.removeViews(0, group.getChildCount());
+
+        if(text == null)
+            return;
+
         HTMLTree tree = new HTMLTree(text);
 
         int start_index = 0;
@@ -742,6 +792,28 @@ public class HtmlRipper {
 
                 // Закрываем и двигаем индекс.
                 start_index = tag.end;
+            }
+
+            // Анимированные смайлы
+            if (displayGifs && supportSmilepack && "smile".equals(tag.name) && tag.isOpening()) {
+                final String src = Providers.SmilepackUtils.getLink(tag.get("id"));
+                if (src.endsWith(".gif")) {
+                    TextView pre_text = form(tree.html.subSequence(start_index, tag.start).toString(), context);
+                    group.addView(pre_text);
+
+                    ImageView gif = new ImageView(context);
+
+                    GlideApp.with(gif)
+                            .load(Meow.getUrl(src))
+                            .into(gif);
+
+                    group.addView(gif);
+
+                    gif.getLayoutParams().width = 70;
+                    gif.getLayoutParams().height = 70;
+
+                    start_index = tag.end;
+                }
             }
 
             // Кат

@@ -13,6 +13,7 @@
     <string name="theme">Тема</string>
     <string name="save_comments_state">Сохранять состояние комментариев</string>
     <string name="select_text">Выделение текста</string>
+    <string name="support_smilepack">Поддержка смайлопака</string>
     <string name="load_videos">Загружать видео</string>
     <string name="load_images">Загружать изображения</string>
     <string name="content">Данные</string>

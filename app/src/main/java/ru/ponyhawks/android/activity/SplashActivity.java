@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.cab404.libph.pages.BasePage;
 import com.cab404.libph.requests.LSRequest;
 import com.cab404.libph.requests.LoginRequest;
+import com.cab404.libph.requests.SmilepackRequest;
 import com.cab404.moonlight.framework.Request;
 
 import java.io.BufferedReader;
@@ -297,8 +299,29 @@ public class SplashActivity extends BaseActivity implements LoginFragment.LoginC
         }
     }
 
+    void loadSmilepack() {
+        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean("supportSmilepack", true))
+            return;
+        try {
+            getRequestManager()
+                    .manage(new SmilepackRequest())
+                    .setCallback(new RequestManager.SimpleRequestCallback<SmilepackRequest>() {
+                        @Override
+                        public void onSuccess(SmilepackRequest what) {
+                            super.onSuccess(what);
+                            Providers.SmilepackUtils.setSmilepack(what.smilepack);
+                            msg("smilepack loaded");
+                        }
+                    })
+                    .start();
+        } catch (Exception e) {
+            msg("filed loading smilepack");
+        }
+    }
+
     void onSuccess() {
         preFlightCheck();
+        loadSmilepack();
         msg("everything is ready to go");
         if (getIntent().hasExtra("returnTo"))
             msg("returning back to caller");

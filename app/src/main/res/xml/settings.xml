@@ -22,6 +22,10 @@
         android:key="textSelectable"
         android:title="@string/select_text"
         android:defaultValue="true"/>
+    <CheckBoxPreference
+        android:key="supportSmilepack"
+        android:title="@string/support_smilepack"
+        android:defaultValue="true"/>
 
     <CheckBoxPreference
         android:key="blockUsers"
