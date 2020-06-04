@@ -794,28 +794,6 @@ public class HtmlRipper {
                 start_index = tag.end;
             }
 
-            // Анимированные смайлы
-            if (displayGifs && supportSmilepack && "smile".equals(tag.name) && tag.isOpening()) {
-                final String src = Providers.SmilepackUtils.getLink(tag.get("id"));
-                if (src.endsWith(".gif")) {
-                    TextView pre_text = form(tree.html.subSequence(start_index, tag.start).toString(), context);
-                    group.addView(pre_text);
-
-                    ImageView gif = new ImageView(context);
-
-                    GlideApp.with(gif)
-                            .load(Meow.getUrl(src))
-                            .into(gif);
-
-                    group.addView(gif);
-
-                    gif.getLayoutParams().width = 70;
-                    gif.getLayoutParams().height = 70;
-
-                    start_index = tag.end;
-                }
-            }
-
             // Кат
             if ("a".equals(tag.name) && tag.get("href") != null && tag.get("href").endsWith("#cut") && !tag.isStandalone()) {
                 TextView pre_text = form(tree.html.subSequence(start_index, tag.start).toString(), context);
