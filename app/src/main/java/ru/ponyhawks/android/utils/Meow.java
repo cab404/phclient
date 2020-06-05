@@ -194,9 +194,16 @@ public class Meow {
 
     }
 
+    public static String hostname = "ponyhawks.ru";
+    public static String scheme = "https";
+
     public static String getUrl(String urlStr) {
-        if (!urlStr.startsWith("http"))
-            urlStr = "https:" + urlStr;
+        if (!urlStr.isEmpty()) {
+            if (urlStr.startsWith("//"))
+                urlStr = scheme + ":" + urlStr;
+            if (urlStr.startsWith("/"))
+                urlStr = scheme + "://" + hostname + urlStr;
+        }
         return urlStr;
     }
 

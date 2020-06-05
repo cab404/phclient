@@ -1,24 +1,25 @@
 package ru.ponyhawks.android.statics;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.cab404.libph.data.CommonInfo;
+import com.cab404.libph.data.Smilepack;
+import com.cab404.libph.requests.SmilepackRequest;
 import com.cab404.libph.util.PonyhawksProfile;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.RequestLine;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.utils.URIUtils;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Observable;
 
 import ru.ponyhawks.android.BuildConfig;
 import ru.ponyhawks.android.utils.Imgur;
+import ru.ponyhawks.android.utils.RequestManager;
 
 /**
  * Bunch of static managers
@@ -176,6 +177,20 @@ public class Providers {
             setChanged();
             this.info = info;
             notifyObservers(info);
+        }
+    }
+
+    public static class SmilepackUtils {
+        private static Smilepack smilepack;
+
+        public static String getLink(String id) {
+            if (smilepack == null)
+                return null;
+            return smilepack.getLink(id);
+        }
+
+        public static void setSmilepack(Smilepack smilepack){
+            SmilepackUtils.smilepack = smilepack;
         }
     }
 }

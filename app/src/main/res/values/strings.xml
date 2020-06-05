@@ -13,6 +13,7 @@
     <string name="theme">Theme</string>
     <string name="save_comments_state">Save comment states</string>
     <string name="select_text">Selectable text</string>
+    <string name="support_smilepack">Support smilepack</string>
     <string name="load_videos">Display videos</string>
     <string name="load_images">Load images</string>
     <string name="content">Content</string>
